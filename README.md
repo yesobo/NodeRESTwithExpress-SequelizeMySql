@@ -1,6 +1,5 @@
-Node.js REST Service to MySql Local database with Express + 
-Sequelize
-=========================================================================
+Node.js REST Service to MySql Local database with Express + Sequelize
+=====================================================================
 
 
 

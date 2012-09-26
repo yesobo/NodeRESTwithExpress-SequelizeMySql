@@ -6,15 +6,15 @@ addPattern = (pattern) ->
 		pattern.id = c + 1
 		Pattern_model.create(pattern).success (pat) ->
 
+# GET all patterns
+app.get '/api/patterns', (req, res) ->
+	Pattern_model.findAll().success (patterns) ->
+		res.send patterns
+
 # GET the number of patterns
 app.get '/api/patterns/count', (req, res) ->
 	Pattern_model.count().success (c) ->
 		res.send c.toString()
-
-# GET all patterns
-app.get '/api/patterns', (req, res) ->
-	Pattern_model.findAll().success (patterns) ->
-		res.send projects
 
 # GET pattern by id
 app.get '/api/patterns/:id', (req, res) ->

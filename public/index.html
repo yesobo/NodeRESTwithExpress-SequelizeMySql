@@ -3,21 +3,39 @@
   <head>
     <meta charset="utf-8">
     <title>API index</title>
+     <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
     <section>
       <h1>Patterns API</h1>
-      <p>
-        <table>
-          - GET api/patterns:       get all the patterns as JSON
-          - GET api/patterns/count: get the number of patterns as text
-          - GET api/patterns/{id}:  get pattern by id as JSON
-          - POST api/patterns:      insert new pattern
-          - PUT api/patterns/{id}:  update pattern by id
-          - DELETE api/pattern/{id}:delete pattern by id
-        </table>
-      </p>
-    </section>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Resource</th>
+            <th>GET</th>
+            <th>POST</th>
+            <th>PUT</th>
+            <th>DELETE</th>
+          </tr>
+          <tr>
+            <th>/api/patterns</th>
+            <td>get all patterns as JSON</td>
+            <td>insert new pattern</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th>/api/patterns/{id}</th>
+            <td>get pattern by id as JSON</td>
+            <td></td>
+            <td>update pattern by id</td>
+            <td>delete pattern by id</td>
+          </tr>
+        </tbody>
+      </table>
+  </section>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
   </body>
 </html>

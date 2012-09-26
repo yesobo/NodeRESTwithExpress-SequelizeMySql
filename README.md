@@ -3,7 +3,6 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 ----------------
 TODO:
 =====
-- design for index.html
 - Api tests:
 	resources:
 		- http://blog.nodejitsu.com/rest-easy-test-any-api-in-nodejs

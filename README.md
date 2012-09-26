@@ -10,7 +10,7 @@ TODO:
 		- http://vowsjs.org/
 
 - document API on README.md
-----------------
+
 References:
 ===========
 	-> Uses Sequelize (http://www.sequelizejs.com/). Good file design but uses express-resource: http://www.ziggytech.net/technology/web-development/experiences-with-node-js-porting-a-restful-service-written-in-java/

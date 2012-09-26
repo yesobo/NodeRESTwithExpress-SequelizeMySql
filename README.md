@@ -28,10 +28,10 @@ express-resource is NOT COMPATIBLE with express3 so I used express for the routi
 ----------------
 API
 ===
--GET api/patterns: get all the patterns as JSON
--GET api/patterns/count: get the number of patterns as text
--GET api/patterns/{id}: get pattern by id as JSON
--POST api/patterns: insert new pattern
+- GET api/patterns: get all the patterns as JSON
+- GET api/patterns/count: get the number of patterns as text
+- GET api/patterns/{id}: get pattern by id as JSON
+- POST api/patterns: insert new pattern
 
 
 

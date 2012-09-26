@@ -18,7 +18,7 @@ References:
 	-> Create a REST service with express3 (instead of express-resource), testing with jQuery: http://pixelhandler.com/blog/2012/02/09/develop-a-restful-api-using-node-js-with-express-and-mongoose/
 
 	-> REST with node + express + mongodb: http://paulallies.wordpress.com/2012/03/05/rest-based-service-with-nodejs-expressjs-and-mongodb/
-----------------
+
 NOTES:
 =====
 - Server created at http://localhost:8010

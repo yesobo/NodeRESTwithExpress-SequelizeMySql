@@ -47,7 +47,6 @@
 
   app.put('/api/patterns/:id', function(req, res) {
     var intId;
-    console.log('------------------->EXECUTING UPDATE');
     intId = parseInt(req.params.id);
     return Pattern_model.find(intId).success(function(pattern) {
       pattern.name = req.body.name;
@@ -57,6 +56,17 @@
       pattern.applicability = req.body.applicability;
       pattern.structure = req.body.structure;
       return pattern.save().success(function() {});
+    });
+  });
+
+  app["delete"]('/api/patterns/:id', function(req, res) {
+    var intId;
+    console.log('------------------->EXECUTING DELETION');
+    intId = parseInt(req.param.id);
+    return Pattern_model.find(intId).success(function(pattern) {
+      return pattern.destroy().success(function() {
+        return res.send('pattern ' + pattern.id + ' deleted');
+      });
     });
   });
 

@@ -6,10 +6,16 @@
   </head>
   <body>
     <section>
-      <h1>Patterns</h1>
+      <h1>Patterns API</h1>
       <p>
-        /patterns<br>
-        
+        <table>
+          - GET api/patterns:       get all the patterns as JSON
+          - GET api/patterns/count: get the number of patterns as text
+          - GET api/patterns/{id}:  get pattern by id as JSON
+          - POST api/patterns:      insert new pattern
+          - PUT api/patterns/{id}:  update pattern by id
+          - DELETE api/pattern/{id}:delete pattern by id
+        </table>
       </p>
     </section>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

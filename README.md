@@ -3,13 +3,12 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 ----------------
 TODO:
 =====
+- design for index.html
 - Api tests:
 	resources:
 		- http://blog.nodejitsu.com/rest-easy-test-any-api-in-nodejs
 		- http://stackoverflow.com/questions/7127226/node-js-testing-restful-api-vows-js
 		- http://vowsjs.org/
-
-- document API on README.md
 
 References:
 ===========
@@ -28,10 +27,12 @@ express-resource is NOT COMPATIBLE with express3 so I used express for the routi
 ----------------
 API
 ===
-- GET api/patterns: get all the patterns as JSON
+- GET api/patterns: 			get all the patterns as JSON
 - GET api/patterns/count: get the number of patterns as text
-- GET api/patterns/{id}: get pattern by id as JSON
-- POST api/patterns: insert new pattern
+- GET api/patterns/{id}: 	get pattern by id as JSON
+- POST api/patterns: 			insert new pattern
+- PUT api/patterns/{id}: 	update pattern by id
+- DELETE api/pattern/{id}:delete pattern by id
 
 
 

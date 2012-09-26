@@ -8,11 +8,15 @@
 <body>
 	
 	<a id="btnCreate" href="JavaScript:post_new_pattern();">
-		Test create
+		Test create id = 3
 	<a/>
 </br>
-	<a id="btnUpadate" href="JavaScript:update_pattern();">
-		Test update
+	<a id="btnUpdate" href="JavaScript:update_pattern();">
+		Test update id = 1
+	<a/>
+</br>
+	<a id="btnDelete" href="JavaScript:delete_pattern();">
+		Test delete id = 1
 	<a/>
 </body>
 <script type="text/javascript">
@@ -35,7 +39,7 @@
 	
 	update_pattern = function() {
 		jQuery.ajax({
-    url: "/api/patterns/1",
+    	url: "/api/patterns/1",
 	    type: "PUT",
 	    data: {
 				"name": "Singleton Modif",
@@ -46,13 +50,23 @@
 				"structure": "structure modif",
 	    },
 	    success: function (data, textStatus, jqXHR) {
-	        console.log("Post response:");
-	        console.dir(data);
-	        console.log(textStatus);
-	        console.dir(jqXHR);
+        console.log("Post response:");
+        console.dir(data);
+        console.log(textStatus);
+        console.dir(jqXHR);
 	    }
 		});
-	};	
+	};
+
+	delete_pattern = function() {
+		jQuery.ajax({
+			url: "/api/patterns/1", 
+			type: "DELETE", 
+			success: function(data, textStatus, jqXHR) { 
+				console.dir(data); 
+			}
+		});
+	}	;
 
 </script>
 </html>

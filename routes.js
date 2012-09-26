@@ -32,10 +32,7 @@
   });
 
   app.post('/api/patterns', function(req, res) {
-    var newId, new_pattern;
-    console.log("POST: ");
-    console.log(req.body);
-    newId = 0;
+    var new_pattern;
     new_pattern = {
       id: null,
       name: req.body.name,
@@ -46,6 +43,21 @@
       structure: req.body.structure
     };
     return addPattern(new_pattern);
+  });
+
+  app.put('/api/patterns/:id', function(req, res) {
+    var intId;
+    console.log('------------------->EXECUTING UPDATE');
+    intId = parseInt(req.params.id);
+    return Pattern_model.find(intId).success(function(pattern) {
+      pattern.name = req.body.name;
+      pattern.category = req.body.category;
+      pattern.intent = req.body.intent;
+      pattern.motivation = req.body.motivation;
+      pattern.applicability = req.body.applicability;
+      pattern.structure = req.body.structure;
+      return pattern.save().success(function() {});
+    });
   });
 
 }).call(this);

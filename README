@@ -1,5 +1,4 @@
-Node.js REST Service to MySql Local database with Express + Sequelize
-=========================================================================
+<h1>Node.js REST Service to MySql Local database with Express + Sequelize</h1>
 
 
 
@@ -32,8 +31,12 @@ API
 ===
 GET api/patterns: get all the patterns as JSON
 ----------------
-
-
+GET api/patterns/count: get the number of patterns as text
+-----------------------
+GET api/patterns/{id}: get pattern by id as JSON
+---------------------
+POST api/patterns: insert new pattern
+-----------------
 
 Files
 ===========

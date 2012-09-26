@@ -6,21 +6,53 @@
 	<title></title>
 </head>
 <body>
-	Factory Method pattern created.
+	
+	<a id="btnCreate" href="JavaScript:post_new_pattern();">
+		Test create
+	<a/>
+</br>
+	<a id="btnUpadate" href="JavaScript:update_pattern();">
+		Test update
+	<a/>
 </body>
-<<script type="text/javascript">
-	jQuery.post("/api/patterns", {
-	  "name": "Factory Method",
-	  "category": "Creational",
-	  "intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
-	  "motivation": "",
-	  "applicability": "",
-	  "structure": ""
-	}, function (data, textStatus, jqXHR) {
-	    console.log("Post response:");
-	    console.dir(data);
-	    console.log(textStatus);
-	    console.dir(jqXHR);
-	});
+<script type="text/javascript">
+	
+	post_new_pattern = function() {
+		jQuery.post("/api/patterns", {
+		  "name": "Factory Method",
+		  "category": "Creational",
+		  "intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
+		  "motivation": "",
+		  "applicability": "",
+		  "structure": ""
+		}, function (data, textStatus, jqXHR) {
+		    console.log("Post response:");
+		    console.dir(data);
+		    console.log(textStatus);
+		    console.dir(jqXHR);
+		});
+	};
+	
+	update_pattern = function() {
+		jQuery.ajax({
+    url: "/api/patterns/1",
+	    type: "PUT",
+	    data: {
+				"name": "Singleton Modif",
+				"category": "Category modif",
+				"intent": "intent modif",
+				"motivation": "motivationModif",
+				"applicability": "applicabitlity modif",
+				"structure": "structure modif",
+	    },
+	    success: function (data, textStatus, jqXHR) {
+	        console.log("Post response:");
+	        console.dir(data);
+	        console.log(textStatus);
+	        console.dir(jqXHR);
+	    }
+		});
+	};	
+
 </script>
 </html>

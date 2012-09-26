@@ -24,9 +24,6 @@ app.get '/api/patterns/:id', (req, res) ->
 
 # POST a new pattern
 app.post '/api/patterns', (req, res) ->
-	console.log "POST: "
-	console.log req.body	
-	newId = 0;
 	new_pattern = 
 		id: null # generated automattically
 		name: req.body.name
@@ -36,3 +33,18 @@ app.post '/api/patterns', (req, res) ->
 		applicability: req.body.applicability
 		structure: req.body.structure
 	addPattern new_pattern
+
+# PUT update pattern by id
+app.put '/api/patterns/:id', (req, res)->
+	console.log '------------------->EXECUTING UPDATE'
+	intId = parseInt(req.params.id)
+	Pattern_model.find(intId).success (pattern) ->
+		pattern.name 					= req.body.name
+		pattern.category	 		= req.body.category
+		pattern.intent	 			= req.body.intent
+		pattern.motivation	 	= req.body.motivation
+		pattern.applicability	= req.body.applicability
+		pattern.structure 		= req.body.structure
+		
+		pattern.save().success ->
+

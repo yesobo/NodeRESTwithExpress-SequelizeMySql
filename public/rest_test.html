@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	Factory Method pattern created.
+</body>
+<<script type="text/javascript">
+	jQuery.post("/api/patterns", {
+	  "name": "Factory Method",
+	  "category": "Creational",
+	  "intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
+	  "motivation": "",
+	  "applicability": "",
+	  "structure": ""
+	}, function (data, textStatus, jqXHR) {
+	    console.log("Post response:");
+	    console.dir(data);
+	    console.log(textStatus);
+	    console.dir(jqXHR);
+	});
+</script>
+</html>

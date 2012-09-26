@@ -21,17 +21,17 @@ References:
 ----------------
 NOTES:
 =====
-Server created at http://localhost:8010
-CoffeeScript implemented.
+- Server created at http://localhost:8010
+- CoffeeScript implemented.
 
-express-resource is NOT COMPATIBLE with express3 so I just use express for the routings
+express-resource is NOT COMPATIBLE with express3 so I used express for the routings
 ----------------
 API
 ===
-GET api/patterns: get all the patterns as JSON
-GET api/patterns/count: get the number of patterns as text
-GET api/patterns/{id}: get pattern by id as JSON
-POST api/patterns: insert new pattern
+-GET api/patterns: get all the patterns as JSON
+-GET api/patterns/count: get the number of patterns as text
+-GET api/patterns/{id}: get pattern by id as JSON
+-POST api/patterns: insert new pattern
 
 
 

@@ -1,4 +1,6 @@
-<h1>Node.js REST Service to MySql Local database with Express + Sequelize</h1>
+Node.js REST Service to MySql Local database with Express + 
+Sequelize
+=========================================================================
 
 
 

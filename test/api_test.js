@@ -88,8 +88,7 @@ describe('Tests for patterns API, ', function() {
 		console.log(http.request);
 		var req = http.request(del_options, callback);
 		req.end();
-		console.log("DELETED");
-
+		console.log("DELETE IS NOT WORKING: DELETE MANUALLY THE PATTERN WITH ID = " + id);
 	};
 
 	describe('Get all patterns test', function(){

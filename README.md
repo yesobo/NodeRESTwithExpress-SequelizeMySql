@@ -4,9 +4,12 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 - Api integration tests:
+	
 	*NOT ABLE TO MAKE REQUEST.PUT AND DELETE NODE REQUESTS ON MOCHA TESTS WORK, but they work testing them with jQuery at rest_test.html*
+	
 	- resources:
 		- http://brianstoner.com/blog/testing-in-nodejs-with-mocha/
+		
 References:
 ===========
 	-> Uses Sequelize (http://www.sequelizejs.com/). Good file design but uses express-resource: http://www.ziggytech.net/technology/web-development/experiences-with-node-js-porting-a-restful-service-written-in-java/

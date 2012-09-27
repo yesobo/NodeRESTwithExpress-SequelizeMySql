@@ -16,7 +16,7 @@
 	<a/>
 </br>
 	<a id="btnDelete" href="JavaScript:delete_pattern();">
-		Test delete id = 1
+		Test delete id = 3
 	<a/>
 </body>
 <script type="text/javascript">
@@ -60,13 +60,13 @@
 
 	delete_pattern = function() {
 		jQuery.ajax({
-			url: "/api/patterns/1", 
+			url: "/api/patterns/3", 
 			type: "DELETE", 
 			success: function(data, textStatus, jqXHR) { 
 				console.dir(data); 
 			}
 		});
-	}	;
+	};
 
 </script>
 </html>

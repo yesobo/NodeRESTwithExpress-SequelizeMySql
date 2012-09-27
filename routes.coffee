@@ -32,7 +32,8 @@ app.post '/api/patterns', (req, res) ->
 		motivation: req.body.motivation
 		applicability: req.body.applicability
 		structure: req.body.structure
-	addPattern new_pattern
+	addPattern(new_pattern)
+	res.send new_pattern
 
 # PUT update pattern by id
 app.put '/api/patterns/:id', (req, res)->
@@ -49,7 +50,8 @@ app.put '/api/patterns/:id', (req, res)->
 
 # DELETE delete product by id
 app.delete '/api/patterns/:id', (req, res)->
-	intId = parseInt req.param.id
+	console.log 'MAKING DELETE----------------'
+	intId = parseInt req.params.id
 	Pattern_model.find(intId).success (pattern)->
 		pattern.destroy().success ->
 			res.send 'pattern ' + pattern.id + ' deleted'

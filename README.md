@@ -3,12 +3,10 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 ----------------
 TODO:
 =====
-- Api tests:
-	resources:
-		- http://blog.nodejitsu.com/rest-easy-test-any-api-in-nodejs
-		- http://stackoverflow.com/questions/7127226/node-js-testing-restful-api-vows-js
-		- http://vowsjs.org/
-
+- Api integration tests:
+	*NOT ABLE TO MAKE REQUEST.PUT AND DELETE NODE REQUESTS ON MOCHA TESTS WORK, but they work testing them with jQuery at rest_test.html*
+	- resources:
+		- http://brianstoner.com/blog/testing-in-nodejs-with-mocha/
 References:
 ===========
 	-> Uses Sequelize (http://www.sequelizejs.com/). Good file design but uses express-resource: http://www.ziggytech.net/technology/web-development/experiences-with-node-js-porting-a-restful-service-written-in-java/
@@ -17,10 +15,13 @@ References:
 
 	-> REST with node + express + mongodb: http://paulallies.wordpress.com/2012/03/05/rest-based-service-with-nodejs-expressjs-and-mongodb/
 
+	-> Mocha.js + should.js + request.js = nice tool for JSON api testing. (See TODO) http://blog.kardigen.org/2012/03/mochajs-shouldjs-requestjs-nice-tool.html
+
 NOTES:
 =====
 - Server created at http://localhost:8010
 - CoffeeScript implemented.
+- Tested with mocha + require + should.js (see TODO)
 
 express-resource is NOT COMPATIBLE with express3 so I used express for the routings
 ----------------

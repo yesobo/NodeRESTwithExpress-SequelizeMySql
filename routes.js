@@ -42,7 +42,8 @@
       applicability: req.body.applicability,
       structure: req.body.structure
     };
-    return addPattern(new_pattern);
+    addPattern(new_pattern);
+    return res.send(new_pattern);
   });
 
   app.put('/api/patterns/:id', function(req, res) {
@@ -61,8 +62,8 @@
 
   app["delete"]('/api/patterns/:id', function(req, res) {
     var intId;
-    console.log('------------------->EXECUTING DELETION');
-    intId = parseInt(req.param.id);
+    console.log('MAKING DELETE----------------');
+    intId = parseInt(req.params.id);
     return Pattern_model.find(intId).success(function(pattern) {
       return pattern.destroy().success(function() {
         return res.send('pattern ' + pattern.id + ' deleted');

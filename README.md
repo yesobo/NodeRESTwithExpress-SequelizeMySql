@@ -4,7 +4,7 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 - Api integration tests:
-	
+	*CHECK IF THE PROBLEM WITH PUT AND DELETE IS SOLVED WITH THE LAST ADDED ALLOWCROSSDOMAIN TO APP FILE*
 	*NOT ABLE TO MAKE REQUEST.PUT AND DELETE NODE REQUESTS ON MOCHA TESTS WORK, but they work testing them with jQuery at rest_test.html*
 	
 	- resources:

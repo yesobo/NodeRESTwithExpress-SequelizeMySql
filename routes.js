@@ -60,14 +60,21 @@
     });
   });
 
-  app["delete"]('/api/patterns/:id', function(req, res) {
+  app.del('/api/patterns/:id', function(req, res) {
     var intId;
-    console.log('MAKING DELETE----------------');
+    console.log('MAKING DELETION----------------');
     intId = parseInt(req.params.id);
     return Pattern_model.find(intId).success(function(pattern) {
-      return pattern.destroy().success(function() {
-        return res.send('pattern ' + pattern.id + ' deleted');
-      });
+      console.log('find of delete operation is sucess');
+      console.log('and the pattern to find is ' + pattern);
+      if (pattern != null) {
+        return pattern.destroy().success(function() {
+          return res.send('pattern ' + pattern.id + ' deleted');
+        });
+      } else {
+        console.log('PATTERN NOT DELETED');
+        return res.send(404);
+      }
     });
   });
 

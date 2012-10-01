@@ -49,11 +49,15 @@ app.put '/api/patterns/:id', (req, res)->
 		pattern.save().success ->
 
 # DELETE delete product by id
-app.delete '/api/patterns/:id', (req, res)->
-	console.log 'MAKING DELETE----------------'
+app.del '/api/patterns/:id', (req, res)->
+	console.log 'MAKING DELETION----------------'
 	intId = parseInt req.params.id
 	Pattern_model.find(intId).success (pattern)->
-		pattern.destroy().success ->
-			res.send 'pattern ' + pattern.id + ' deleted'
-
-
+			console.log 'find of delete operation is sucess'
+			console.log 'and the pattern to find is ' + pattern
+			if pattern?
+				pattern.destroy().success ->
+					res.send 'pattern ' + pattern.id + ' deleted'
+			else 
+				console.log 'PATTERN NOT DELETED'
+				res.send 404

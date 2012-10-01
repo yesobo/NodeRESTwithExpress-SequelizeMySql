@@ -4,11 +4,10 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 - Api integration tests:
-	*CHECK IF THE PROBLEM WITH PUT AND DELETE IS SOLVED WITH THE LAST ADDED ALLOWCROSSDOMAIN TO APP FILE*
-	*NOT ABLE TO MAKE REQUEST.PUT AND DELETE NODE REQUESTS ON MOCHA TESTS WORK, but they work testing them with jQuery at rest_test.html*
-	
-	- resources:
-		- http://brianstoner.com/blog/testing-in-nodejs-with-mocha/
+	*NOT ABLE TO MAKE REQUEST.PUT AND DELETE NODE REQUESTS ON MOCHA TESTS WORKING, but they work testing them with vows and jQuery at rest_test.html *
+
+	- Create a test with Jasmine. 
+	- finish tests with vows and mocha including error codes.
 
 References:
 ===========
@@ -20,11 +19,14 @@ References:
 
 - Mocha.js + should.js + request.js = nice tool for JSON api testing. (See TODO) http://blog.kardigen.org/2012/03/mochajs-shouldjs-requestjs-nice-tool.html
 
+- 
+
 NOTES:
 =====
 - Server created at http://localhost:8010
 - CoffeeScript implemented.
-- Tested with mocha + require + should.js (see TODO)
+- Tested with mocha + request + should.js (see TODO)
+- Tested with vows + request + assert (see TODO)
 
 express-resource is NOT COMPATIBLE with express3 so I used express for the routings
 ----------------

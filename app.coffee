@@ -54,6 +54,7 @@ app.configure =>
 	app.use allowCrossDomain
 	app.use express.cookieParser()
 	app.use express.static(__dirname + "/public")
+	#app.use "/test", express.static(__dirname + "/public/test")
 
 app.configure 'development', ->
 	app.use express.errorHandler(

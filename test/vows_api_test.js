@@ -23,13 +23,10 @@ var vows = require('vows'),
 		},
 		deleted = false,
 		assert_deletion_loop = function(error, res, body) {
-			console.log('delete response statusCode = ' + res.statusCode);
 			if (res.statusCode === 404) {
-				console.log ("inserted pattern not foud yet");
 				request(del_options, assert_deletion_loop);
 			}
 			else {
-				console.log ("pattern deleted");
 				deleted = true;
 				assert.equal(deleted, true);
 			}
@@ -56,7 +53,6 @@ vows.describe('patterns API test').addBatch({
 		},
 		'after a succesful insertion': {
 			topic: function() {
-				console.log("calling deletion");
 				request(del_options, this.callback);
 			},
 			'should have deleted the pattern': assert_deletion_loop

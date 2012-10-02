@@ -79,22 +79,6 @@ describe('Tests for patterns API, ', function() {
 		console.log('making DELETE call to ' + del_options.path + ' waiting for callback...');
 		
 		request(del_options, callback);
-
-		
-
-//		var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-//		var xhr = new XMLHttpRequest();
-//		xhr.onreadystatechange = function() {
-//			console.log("State: " + this.readyState);
-//			if (this.readyState == 4) {
-//				console.log("DELETE CALLBACK RUNNING...");
-//			} else {
-//				console.log("ERROR CALLING DELETE");
-//			}
-//		};
-//		xhr.open("DEL", "http://localhost:8010/api/patterns/3");
-//		xhr.send();
-		
 		console.log("DELETE IS NOT WORKING: DELETE THE PATTERN MANUALLY WITH ID = " + id);
 	};
 

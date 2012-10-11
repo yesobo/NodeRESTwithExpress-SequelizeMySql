@@ -1,5 +1,6 @@
-var request = require('request'),
-		should = require('should');
+var modules_url = '../node_modules';
+var request = require(modules_url + '/request'),
+	should = require(modules_url + '/should');
 
 var url = 'http://localhost:8010';
 

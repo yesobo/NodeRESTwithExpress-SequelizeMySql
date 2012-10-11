@@ -3,7 +3,9 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 ----------------
 TODO:
 =====
-- New branch with mongoHQ source DB.
+- New branch mongoHQdb: (current on work)
+	
+	
 - Api integration tests:
 	*NOT ABLE TO MAKE REQUEST.PUT AND DELETE NODE REQUESTS ON MOCHA TESTS WORKING, but they work testing them with vows, qunit and jQuery at rest_test.html 
     TRY WITH Restify ref: http://tech.flurry.com/regression-testing-api-services-with-restify*

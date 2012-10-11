@@ -5,7 +5,8 @@ TODO:
 =====
 - New branch with mongoHQ source DB.
 - Api integration tests:
-	*NOT ABLE TO MAKE REQUEST.PUT AND DELETE NODE REQUESTS ON MOCHA TESTS WORKING, but they work testing them with vows, qunit and jQuery at rest_test.html *
+	*NOT ABLE TO MAKE REQUEST.PUT AND DELETE NODE REQUESTS ON MOCHA TESTS WORKING, but they work testing them with vows, qunit and jQuery at rest_test.html 
+    TRY WITH Restify ref: http://tech.flurry.com/regression-testing-api-services-with-restify*
 
 	- Create a test with Jasmine. 
 	- finish tests with vows, qUnit and mocha including error codes.

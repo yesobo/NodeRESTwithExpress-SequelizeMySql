@@ -181,5 +181,4 @@ describe('Tests for patterns API, ', function() {
 			request(post_options, put_callback);
 		});
 	});
-
 });

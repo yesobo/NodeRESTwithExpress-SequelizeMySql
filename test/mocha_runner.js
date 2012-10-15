@@ -8,8 +8,10 @@
 
   passed = failed = [];
 
-  mocha.addFile('test/mocha_api_test');
+  mocha.addFile('mocha_api_test');
 
+  mocha.run();
+  /*
   mocha.run(function() {
     var testName, _i, _j, _len, _len1, _results;
     console.log(passed.length + 'Test passed');
@@ -29,5 +31,6 @@
   }).on('pass', function(test) {
     return passed.push(test.title);
   });
+*/
 
 }).call(this);

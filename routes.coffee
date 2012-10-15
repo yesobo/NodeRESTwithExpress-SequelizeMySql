@@ -1,10 +1,10 @@
 Pattern_model = db.models.Pattern
 
 # Adds a pattern to the db
-addPattern = (pattern) ->
+addPattern = (pattern, cb) ->
 	Pattern_model.count().success (c)->
 		pattern.id = c + 1
-		Pattern_model.create(pattern).success (pat) ->
+		Pattern_model.create(pattern).success cb
 
 # GET all patterns
 app.get '/api/patterns', (req, res) ->
@@ -20,7 +20,10 @@ app.get '/api/patterns/count', (req, res) ->
 app.get '/api/patterns/:id', (req, res) ->
 	intId = parseInt(req.params.id)
 	Pattern_model.find(intId).success (pattern) ->
-		res.send pattern
+		if pattern? 
+			res.send(pattern) 
+		else 
+			res.send 404 
 
 # POST a new pattern
 app.post '/api/patterns', (req, res) ->
@@ -32,8 +35,11 @@ app.post '/api/patterns', (req, res) ->
 		motivation: req.body.motivation
 		applicability: req.body.applicability
 		structure: req.body.structure
-	addPattern(new_pattern)
-	res.send new_pattern
+	addPattern new_pattern, (pattern) ->
+			console.log 'Sending to response = '
+			console.log new_pattern
+			res.send new_pattern
+	
 
 # PUT update pattern by id
 app.put '/api/patterns/:id', (req, res)->
@@ -47,6 +53,7 @@ app.put '/api/patterns/:id', (req, res)->
 		pattern.structure 		= req.body.structure
 		
 		pattern.save().success ->
+			res.send 200
 
 # DELETE delete product by id
 app.del '/api/patterns/:id', (req, res)->
@@ -57,7 +64,9 @@ app.del '/api/patterns/:id', (req, res)->
 			console.log 'and the pattern to find is ' + pattern
 			if pattern?
 				pattern.destroy().success ->
+					console.log 'calling success delete callback'
 					res.send 'pattern ' + pattern.id + ' deleted'
+				console.log 'this log is after destroy waiting for destroy callback...'
 			else 
 				console.log 'PATTERN NOT DELETED'
 				res.send 404

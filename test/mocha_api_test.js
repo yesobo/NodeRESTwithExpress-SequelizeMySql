@@ -14,6 +14,16 @@ var test_pattern1 = {
     "structure": "Cambiar por BLOB"
   };
 
+var test_pattern1_modif = {
+    "id": 1,
+    "name": "MODIF Singleton",
+    "category": "MODIF Creational",
+    "intent": "MODIF Ensure a class only has one instance, and provide a global point of acg cess to it",
+    "motivation": "MODIF It's important for some classes to have exactly one instance. Making a class responsible for keepintrack of its sole instance.",
+    "applicability": "MODIF there must be exactly one instance of a class, and it must be accessible.\\nwhen the sole instance should be extensible by subclassing, and clients",
+    "structure": "MODIF Cambiar por BLOB"
+	};
+
 var test_pattern2 = {
     "id": 2,
     "name": "Prototype",
@@ -36,14 +46,14 @@ var test_pattern2 = {
 
 describe('Tests for patterns API, ', function() {
 
-	var testIfExists = function(test_pattern) {
-		request.get(url + '/api/patterns/1', function (err, res, body) {
+	var testIfExists = function(test_pattern, cb) {
+		request.get(url + '/api/patterns/' + test_pattern.id, function (err, res, body) {
 			if(err) {
+				console.log("error");
 				done(err);
 			}
 			else {
 				res.statusCode.should.be.equal(200);
-				res.should.be.json;
 				should.exist(body);
 				var pattern = JSON.parse(body);
 				pattern.should.have.property('id', test_pattern.id);
@@ -53,12 +63,20 @@ describe('Tests for patterns API, ', function() {
 				pattern.should.have.property('motivation', test_pattern.motivation);
 				pattern.should.have.property('applicability', test_pattern.applicability);
 				pattern.should.have.property('structure', test_pattern.structure);
+				cb();
 			}
 		});
 	};
 
-	var deletePatternById = function(id) {
-		
+	var testIfNotExists = function(test_pattern, cb) {
+		request.get(url + '/api/patterns/' + test_pattern.id, function (err, res, body) {
+			res.statusCode.should.be.equal(404);
+			cb();
+		});
+	};
+
+	var deletePatternById = function(id, cb) {
+
 		var del_options = {
 			method: 'DELETE',
 			uri: url + '/api/patterns/3',
@@ -68,19 +86,7 @@ describe('Tests for patterns API, ', function() {
 				"Content-Type": "application/json"
 			}
 		};
-
-		var callback = function(error, response, body) {
-			if(error) {
-				console.log('ERROR AL HACER LA LLAMADA A DELETE!!!!!');
-			}
-			else {
-				console.log("LLAMADA REALIZADA CORRECTAMENTE");
-			}
-		};
-		console.log('making DELETE call to ' + del_options.path + ' waiting for callback...');
-		
-		request(del_options, callback);
-		console.log("DELETE IS NOT WORKING: DELETE THE PATTERN MANUALLY WITH ID = " + id);
+		request(del_options, cb);
 	};
 
 	describe('Get all patterns test', function(){
@@ -96,8 +102,22 @@ describe('Tests for patterns API, ', function() {
 					var patterns = JSON.parse(body);
 					patterns.should.be.an.instanceOf(Array);
 					patterns.should.have.length(2);
-					patterns.should.includeEql(test_pattern1);
-					patterns.should.includeEql(test_pattern2);
+					
+					var aux_pattern;
+					for (var i = 0; i < patterns.length; i++) {
+						if (i === 0) {
+							aux_pattern = test_pattern1;
+						} else {
+							aux_pattern = test_pattern2;
+						}
+						patterns[i].id = aux_pattern.id;
+						patterns[i].name = aux_pattern.name;
+						patterns[i].category = aux_pattern.category;
+						patterns[i].intent = aux_pattern.intent;
+						patterns[i].motivation = aux_pattern.motivation;
+						patterns[i].applicability = aux_pattern.applicability;
+						patterns[i].structure = aux_pattern.structure;
+					}
 					done();
 				}
 			});
@@ -124,11 +144,12 @@ describe('Tests for patterns API, ', function() {
 
 	describe('Get pattern with id = 1 test', function() {
 		it('should be succesful', function(done){
-			testIfExists(test_pattern1);
-			done();
+			testIfExists(test_pattern1, function() {
+				done();
+			});
 		});
 	});
-	
+
 	describe('Insert new pattern with id = 3', function() {
 		it('should be succesful', function(done){
 			var post_options = {
@@ -140,14 +161,37 @@ describe('Tests for patterns API, ', function() {
 					"Content-Type": "application/json"
 				}
 			};
-			var post_callback = function(error, response, body) {
-				done();
+			var post_callback = function(error, res, body) {
+				res.statusCode.should.be.equal(200);
+				// Check if new_pattern is in the db
+				testIfExists(new_pattern, function() {
+					deletePatternById(new_pattern.id, function() {
+						testIfNotExists(new_pattern, function() {
+							done();
+						});
+					});
+				});
 			};
 			request(post_options, post_callback);
 		});
-		after(function() {
-			console.log('Executing deletion after insert');
-			deletePatternById(new_pattern.id);
+	});
+
+	describe('Update pattern with id = 1 test', function() {
+		it('should be succesful', function(done){
+			var post_options = {
+				method: 'PUT',
+				uri: url + '/api/patterns/1',
+				form: test_pattern1,
+				port: 8010,
+				headers: {
+					"Content-Type": "application/json"
+				}
+			};
+			var put_callback = function(error, res, body) {
+				res.statusCode.should.be.equal(200);
+				done();
+			};
+			request(post_options, put_callback);
 		});
 	});
 });

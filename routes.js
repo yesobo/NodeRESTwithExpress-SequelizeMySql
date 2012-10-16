@@ -4,10 +4,12 @@
 
   Pattern_model = db.models.Pattern;
 
-  addPattern = function(pattern) {
+  addPattern = function(pattern, cb) {
     return Pattern_model.count().success(function(c) {
       pattern.id = c + 1;
-      return Pattern_model.create(pattern).success(function(pat) {});
+      return Pattern_model.create(pattern).success(function(pat) {
+        return cb();
+      });
     });
   };
 
@@ -42,8 +44,9 @@
       applicability: req.body.applicability,
       structure: req.body.structure
     };
-    addPattern(new_pattern);
-    return res.send(new_pattern);
+    return addPattern(new_pattern, function() {
+      return res.send(new_pattern);
+    });
   });
 
   app.put('/api/patterns/:id', function(req, res) {
@@ -62,17 +65,13 @@
 
   app.del('/api/patterns/:id', function(req, res) {
     var intId;
-    console.log('MAKING DELETION----------------');
     intId = parseInt(req.params.id);
     return Pattern_model.find(intId).success(function(pattern) {
-      console.log('find of delete operation is sucess');
-      console.log('and the pattern to find is ' + pattern);
       if (pattern != null) {
         return pattern.destroy().success(function() {
           return res.send('pattern ' + pattern.id + ' deleted');
         });
       } else {
-        console.log('PATTERN NOT DELETED');
         return res.send(404);
       }
     });

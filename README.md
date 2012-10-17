@@ -3,10 +3,10 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 ----------------
 TODO:
 =====
-- Finish mocha update and delete tests
-- New branch mongoHQdb: (current on work)
-	
-	
+- Test return error codes.
+- New branch mongoHQdb:
+	- still test error responses.
+
 - Api integration tests:
 	- Create a test with Jasmine. 
 	- finish tests with vows, qUnit and mocha including error codes.

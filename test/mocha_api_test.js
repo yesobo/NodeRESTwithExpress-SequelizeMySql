@@ -49,12 +49,10 @@ describe('Tests for patterns API, ', function() {
 	var testIfExists = function(test_pattern, cb) {
 		request.get(url + '/api/patterns/' + test_pattern.id, function (err, res, body) {
 			if(err) {
-				console.log("error");
 				done(err);
 			}
 			else {
 				res.statusCode.should.be.equal(200);
-				res.should.be.json;
 				should.exist(body);
 				var pattern = JSON.parse(body);
 				pattern.should.have.property('id', test_pattern.id);
@@ -77,7 +75,6 @@ describe('Tests for patterns API, ', function() {
 	};
 
 	var deletePatternById = function(id, cb) {
-		
 		var del_options = {
 			method: 'DELETE',
 			uri: url + '/api/patterns/3',
@@ -103,8 +100,22 @@ describe('Tests for patterns API, ', function() {
 					var patterns = JSON.parse(body);
 					patterns.should.be.an.instanceOf(Array);
 					patterns.should.have.length(2);
-					patterns.should.includeEql(test_pattern1);
-					patterns.should.includeEql(test_pattern2);
+					
+					var aux_pattern;
+					for (var i = 0; i < patterns.length; i++) {
+						if (i === 0) {
+							aux_pattern = test_pattern1;
+						} else {
+							aux_pattern = test_pattern2;
+						}
+						patterns[i].id = aux_pattern.id;
+						patterns[i].name = aux_pattern.name;
+						patterns[i].category = aux_pattern.category;
+						patterns[i].intent = aux_pattern.intent;
+						patterns[i].motivation = aux_pattern.motivation;
+						patterns[i].applicability = aux_pattern.applicability;
+						patterns[i].structure = aux_pattern.structure;
+					}
 					done();
 				}
 			});
@@ -136,7 +147,7 @@ describe('Tests for patterns API, ', function() {
 			});
 		});
 	});
-	
+
 	describe('Insert new pattern with id = 3', function() {
 		it('should be succesful', function(done){
 			var post_options = {

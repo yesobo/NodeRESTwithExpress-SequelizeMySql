@@ -7,7 +7,9 @@
   addPattern = function(pattern, cb) {
     return Pattern_model.count().success(function(c) {
       pattern.id = c + 1;
-      return Pattern_model.create(pattern).success(cb);
+      return Pattern_model.create(pattern).success(function(pat) {
+        return cb();
+      });
     });
   };
 
@@ -47,8 +49,6 @@
       structure: req.body.structure
     };
     return addPattern(new_pattern, function(pattern) {
-      console.log('Sending to response = ');
-      console.log(new_pattern);
       return res.send(new_pattern);
     });
   });
@@ -71,19 +71,13 @@
 
   app.del('/api/patterns/:id', function(req, res) {
     var intId;
-    console.log('MAKING DELETION----------------');
     intId = parseInt(req.params.id);
     return Pattern_model.find(intId).success(function(pattern) {
-      console.log('find of delete operation is sucess');
-      console.log('and the pattern to find is ' + pattern);
       if (pattern != null) {
-        pattern.destroy().success(function() {
-          console.log('calling success delete callback');
+        return pattern.destroy().success(function() {
           return res.send('pattern ' + pattern.id + ' deleted');
         });
-        return console.log('this log is after destroy waiting for destroy callback...');
       } else {
-        console.log('PATTERN NOT DELETED');
         return res.send(404);
       }
     });

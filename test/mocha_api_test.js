@@ -49,7 +49,6 @@ describe('Tests for patterns API, ', function() {
 	var testIfExists = function(test_pattern, cb) {
 		request.get(url + '/api/patterns/' + test_pattern.id, function (err, res, body) {
 			if(err) {
-				console.log("error");
 				done(err);
 			}
 			else {
@@ -76,7 +75,6 @@ describe('Tests for patterns API, ', function() {
 	};
 
 	var deletePatternById = function(id, cb) {
-
 		var del_options = {
 			method: 'DELETE',
 			uri: url + '/api/patterns/3',

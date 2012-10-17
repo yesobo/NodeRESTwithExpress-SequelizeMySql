@@ -31,12 +31,20 @@
 
   app.get('/api/patterns/:id', function(req, res) {
     var intId;
-    intId = parseInt(req.param.id);
+    intId = parseInt(req.params.id);
     return db.collection('design_patterns', function(err, collection) {
       return collection.findOne({
         id: intId
       }, function(err, item) {
-        return res.send(item);
+        if (err != null) {
+          return res.send(500);
+        } else {
+          if (item != null) {
+            return res.send(item);
+          } else {
+            return res.send(404);
+          }
+        }
       });
     });
   });
@@ -54,6 +62,55 @@
     };
     return addPattern(new_pattern, function() {
       return res.send(new_pattern);
+    });
+  });
+
+  app.put('/api/patterns/:id', function(req, res) {
+    var intId, updated_pattern;
+    intId = parseInt(req.params.id);
+    updated_pattern = {
+      name: req.body.name,
+      category: req.body.category,
+      intent: req.body.intent,
+      motivation: req.body.motivation,
+      applicability: req.body.applicability,
+      structure: req.body.structure
+    };
+    return db.collection('design_patterns', function(err, collection) {
+      return collection.update({
+        id: intId
+      }, {
+        $set: {
+          name: updated_pattern.name,
+          category: updated_pattern.category,
+          intent: updated_pattern.intent,
+          motivation: updated_pattern.motivation,
+          applicability: updated_pattern.applicability,
+          structure: updated_pattern.structure
+        }
+      }, function(err) {
+        if (err != null) {
+          return res.send(404);
+        } else {
+          return res.send(updated_pattern);
+        }
+      });
+    });
+  });
+
+  app.del('/api/patterns/:id', function(req, res) {
+    var intId;
+    intId = parseInt(req.params.id);
+    return db.collection('design_patterns', function(err, collection) {
+      return collection.remove({
+        id: intId
+      }, function(err, removed) {
+        if (err != null) {
+          return res.send(500);
+        } else {
+          return res.send(removed);
+        }
+      });
     });
   });
 

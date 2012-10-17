@@ -15,12 +15,13 @@
 
   module.exports = function() {
     var db;
+    log('connecting to database...');
     db = new mongodb.Db('design_patterns', new mongodb.Server('alex.mongohq.com', 10001, {
       auto_reconnect: true
     }), {});
     db.open(function(err, p_client) {
       return db.authenticate('admin', '1234', function(err) {
-        return log('autenticated!');
+        return log('authenticated!');
       });
     });
     return db;

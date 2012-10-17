@@ -21,10 +21,16 @@ app.get '/api/patterns/count', (req, res) ->
 
 # GET pattern by id
 app.get '/api/patterns/:id', (req, res) ->
-	intId = parseInt req.param.id
+	intId = parseInt req.params.id
 	db.collection 'design_patterns', (err, collection) ->
 		collection.findOne id:intId , (err, item)->
-			res.send item
+			if err?
+				res.send 500	
+			else
+				if item?
+					res.send item
+				else
+					res.send 404
 
 # POST a new pattern
 app.post '/api/patterns', (req, res) ->
@@ -38,3 +44,38 @@ app.post '/api/patterns', (req, res) ->
 		structure: req.body.structure
 	addPattern new_pattern, () ->
 		res.send new_pattern
+
+# PUT upgrade pattern by id
+app.put '/api/patterns/:id', (req, res) ->
+	intId = parseInt req.params.id
+	updated_pattern =
+		name: req.body.name
+		category: req.body.category
+		intent: req.body.intent
+		motivation: req.body.motivation
+		applicability: req.body.applicability
+		structure: req.body.structure
+	db.collection 'design_patterns', (err, collection) ->
+		collection.update id:intId, 
+			$set: 
+				name: updated_pattern.name
+				category: updated_pattern.category
+				intent: updated_pattern.intent
+				motivation: updated_pattern.motivation
+				applicability: updated_pattern.applicability
+				structure: updated_pattern.structure,
+			(err) ->
+				if err? 
+					res.send 404
+				else
+					res.send updated_pattern
+
+# DELETE delete product by id
+app.del '/api/patterns/:id', (req, res) ->
+	intId = parseInt req.params.id
+	db.collection 'design_patterns', (err, collection) ->
+		collection.remove id:intId, (err, removed) ->
+			if err?
+				res.send 500
+			else
+				res.send removed

@@ -6,13 +6,14 @@ log = console.log
 Database Connection
 ###
 module.exports = () ->
+	log 'connecting to database...'
 	#connection_uri = "mongodb://admin:1234@alex.mongohq.com:10001/design_patterns"
 	db = new mongodb.Db('design_patterns', new mongodb.Server('alex.mongohq.com', 10001, {auto_reconnect:true}), {});
 	db.open (err, p_client) ->
   		#Notice the USERNAME and PASSWORD!
   		db.authenticate 'admin', '1234', (err) ->
    			#Change error handler when going into production
-   			log 'autenticated!'
+   			log 'authenticated!'
 	db	
 ###
 	dbOp =

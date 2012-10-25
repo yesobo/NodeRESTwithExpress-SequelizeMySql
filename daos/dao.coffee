@@ -1,3 +1,11 @@
+#npm install mongodb
+mongodb = require 'mongodb'
+
+###
+Use:
+	connector = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 100001
+	connector.findAll (err, items) -> res.send items
+###
 class MongoDBConnector
 	# dbName = 'design_patterns'
 	# port = 100001
@@ -8,7 +16,7 @@ class MongoDBConnector
 			@db.authenticate 'admin', '1234', (err) ->
 	
 	#call: callback parameters are (err, collection)
-	initTransaction: (callback) ->
+	initTransaction = (callback) ->
 		@db.collection @dbName, callback
 
 

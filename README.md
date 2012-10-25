@@ -4,6 +4,11 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 - Test return error codes.
+
+- New branch daos.
+	- convert database and routes files in one routes file and multiple dao files.
+		- finish mongo dao exporting it.
+
 - New branch mongoHQdb:
 	- still test error responses.
 

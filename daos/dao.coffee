@@ -6,10 +6,10 @@ Use:
 	connector = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 100001
 	connector.findAll (err, items) -> res.send items
 ###
-class MongoDBConnector
+module.exports = class MongoDBConnector
 	# dbName = 'design_patterns'
-	# port = 100001
 	# host = 'alex.mongohq.com'
+	# port = 100001
 	constructor: (@dbName, @host, @port) ->
 		@db = new mongodb.Db(@dbName, new mongodb.Server(@host, @port, {auto_reconnect:true}), {});
 		@db.open (err, p_client) ->

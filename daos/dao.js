@@ -11,7 +11,7 @@
   */
 
 
-  MongoDBConnector = (function() {
+  module.exports = MongoDBConnector = (function() {
     var initTransaction;
 
     function MongoDBConnector(dbName, host, port) {

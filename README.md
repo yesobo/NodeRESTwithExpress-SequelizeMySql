@@ -4,7 +4,7 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 
-- On daos branch, test the MongoDBConnector with mocha class on dao_test.coffee
+- On daos branch, continue testing the MongoDBConnector with mocha class on dao_test.coffee
 
 - Test return error codes.
 

@@ -22,8 +22,9 @@ module.exports = class MongoDBConnector
 
 	#call: callback parameters are (err, items)
 	findAll: (callback) ->
-		initTransaction (err, collection) ->
+		initTransaction.call this, (err, collection) ->
 			collection.find().toArray (err, items) ->
+				console.log 'collection.find response'
 				callback err, items
 
 	#call: callback parameters are (err, count)

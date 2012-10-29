@@ -31,8 +31,9 @@
     };
 
     MongoDBConnector.prototype.findAll = function(callback) {
-      return initTransaction(function(err, collection) {
+      return initTransaction.call(this, function(err, collection) {
         return collection.find().toArray(function(err, items) {
+          console.log('collection.find response');
           return callback(err, items);
         });
       });

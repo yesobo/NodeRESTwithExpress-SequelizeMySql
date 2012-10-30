@@ -14,12 +14,12 @@
     var daoObj;
     daoObj = null;
     beforeEach(function() {
-      return daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 100001);
+      return daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
     });
     it('Can be instatiated with paraneters', function(done) {
       daoObj.should.have.property('dbName', 'design_patterns');
       daoObj.should.have.property('host', 'alex.mongohq.com');
-      daoObj.should.have.property('port', 100001);
+      daoObj.should.have.property('port', 10001);
       daoObj.should.have.property('db');
       should.exist(daoObj.db);
       daoObj.db.should.be.an["instanceof"](mongodb.Db);

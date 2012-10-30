@@ -9,7 +9,7 @@ Use:
 module.exports = class MongoDBConnector
 	# dbName = 'design_patterns'
 	# host = 'alex.mongohq.com'
-	# port = 100001
+	# port = 10001
 	constructor: (@dbName, @host, @port) ->
 		@db = new mongodb.Db(@dbName, new mongodb.Server(@host, @port, {auto_reconnect:true}), {});
 		@db.open (err, p_client) ->
@@ -24,7 +24,6 @@ module.exports = class MongoDBConnector
 	findAll: (callback) ->
 		initTransaction.call this, (err, collection) ->
 			collection.find().toArray (err, items) ->
-				console.log 'collection.find response'
 				callback err, items
 
 	#call: callback parameters are (err, count)

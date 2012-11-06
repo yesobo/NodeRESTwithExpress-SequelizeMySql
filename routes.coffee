@@ -9,6 +9,7 @@ addPattern = (pattern, cb) ->
 
 # GET all patterns
 app.get '/api/patterns', (req, res) ->
+	console.log 'getting all patterns'
 	Pattern_model.findAll().success (patterns) ->
 		res.send patterns
 

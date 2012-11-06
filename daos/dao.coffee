@@ -12,9 +12,11 @@ module.exports = class MongoDBConnector
 	# port = 10001
 	constructor: (@dbName, @host, @port) ->
 		@db = new mongodb.Db(@dbName, new mongodb.Server(@host, @port, {auto_reconnect:true}), {});
+		privateDb = @db
 		@db.open (err, p_client) ->
-			@db.authenticate 'admin', '1234', (err) ->
-	
+			privateDb.authenticate 'admin', '1234', (err) ->
+				console.log 'autenticated!'
+
 	#call: callback parameters are (err, collection)
 	initTransaction = (callback) ->
 		@db.collection @dbName, callback
@@ -23,6 +25,7 @@ module.exports = class MongoDBConnector
 	#call: callback parameters are (err, items)
 	findAll: (callback) ->
 		initTransaction.call this, (err, collection) ->
+			console.log 'calling find()...'
 			collection.find().toArray (err, items) ->
 				callback err, items
 

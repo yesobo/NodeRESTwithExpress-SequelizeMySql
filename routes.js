@@ -14,6 +14,7 @@
   };
 
   app.get('/api/patterns', function(req, res) {
+    console.log('getting all patterns');
     return Pattern_model.findAll().success(function(patterns) {
       return res.send(patterns);
     });

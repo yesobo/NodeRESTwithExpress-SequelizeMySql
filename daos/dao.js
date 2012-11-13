@@ -15,39 +15,50 @@
     var initTransaction;
 
     function MongoDBConnector(dbName, host, port) {
-      var privateDb;
       this.dbName = dbName;
       this.host = host;
       this.port = port;
       this.db = new mongodb.Db(this.dbName, new mongodb.Server(this.host, this.port, {
         auto_reconnect: true
       }), {});
-      privateDb = this.db;
-      this.db.open(function(err, p_client) {
-        return privateDb.authenticate('admin', '1234', function(err) {
-          return console.log('autenticated!');
-        });
-      });
     }
 
     initTransaction = function(callback) {
-      return this.db.collection(this.dbName, callback);
+      var privateDBName, privateDb;
+      if (this.db._state === 'connected') {
+        return this.db.collection(this.dbName, callback);
+      } else {
+        privateDb = this.db;
+        privateDBName = this.dbName;
+        return this.db.open(function(err, p_client) {
+          return privateDb.authenticate('admin', '1234', function(err) {
+            return privateDb.collection(privateDBName, callback);
+          });
+        });
+      }
     };
 
     MongoDBConnector.prototype.findAll = function(callback) {
       return initTransaction.call(this, function(err, collection) {
-        console.log('calling find()...');
-        return collection.find().toArray(function(err, items) {
-          return callback(err, items);
-        });
+        if (err != null) {
+          return callback(err, null);
+        } else {
+          return collection.find().toArray(function(err, items) {
+            return callback(err, items);
+          });
+        }
       });
     };
 
     MongoDBConnector.prototype.count = function(callback) {
-      return initTransaction(function(err, collection) {
-        return collection.count(function(err, count) {
-          return callback(err, count);
-        });
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          return callback(err, null);
+        } else {
+          return collection.count(function(err, count) {
+            return callback(err, count);
+          });
+        }
       });
     };
 

@@ -17,9 +17,16 @@ describe 'Tests for MongoDBConnector', ->
 		should.exist daoObj.db
 		daoObj.db.should.be.an.instanceof mongodb.Db
 		done()
-	it 'findAll returns a collection', (done) ->
-		daoObj.findAll (err, items)->
-			items.should.be.json
+	it 'findAll returns my collection', (done) ->
+		daoObj.findAll (err, items) ->
 			items.should.be.an.instanceOf Array
 			items.should.have.length 2
+			done()
+	it "count returns my collection's number", (done) ->
+		daoObj.count (err, count) ->
+			should.strictEqual count, 2
+			done()
+	it "findById with id = 2 returns the Prototype pattern"
+		daoObj.findById (err, item) ->
+			item.name.should.be.equals "Prototype"
 			done()

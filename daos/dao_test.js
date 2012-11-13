@@ -25,14 +25,20 @@
       daoObj.db.should.be.an["instanceof"](mongodb.Db);
       return done();
     });
-    return it('findAll returns a collection', function(done) {
+    it('findAll returns my collection', function(done) {
       return daoObj.findAll(function(err, items) {
-        items.should.be.json;
         items.should.be.an.instanceOf(Array);
         items.should.have.length(2);
         return done();
       });
     });
+    it("count returns my collection's number", function(done) {
+      return daoObj.count(function(err, count) {
+        should.strictEqual(count, 2);
+        return done();
+      });
+    });
+    return it("findById with id = 2 returns the Prototype pattern");
   });
 
 }).call(this);

@@ -4,7 +4,7 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 
-- On daos branch, continue testing the MongoDBConnector with mocha class on dao/dao_test.coffee. timeout -> POSSIBLE CAUSE: watching the last added traces at dao.coffee, the constructor's authentication (constructor) is executing AFTER the find method's call.
+- On daos branch, continue testing the MongoDBConnector with mocha class on dao/dao_test.coffee. continue with find insert.
 
 - Test return error codes.
 

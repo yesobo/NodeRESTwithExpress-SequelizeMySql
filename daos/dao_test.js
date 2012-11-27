@@ -11,8 +11,17 @@
   should = require("" + modules_url + "/should");
 
   describe('Tests for MongoDBConnector', function() {
-    var daoObj;
+    var daoObj, new_pattern;
     daoObj = null;
+    new_pattern = {
+      "id": 3,
+      "name": "Factory Method",
+      "category": "Creational",
+      "intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
+      "motivation": "",
+      "applicability": "",
+      "structure": ""
+    };
     beforeEach(function() {
       return daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
     });
@@ -38,7 +47,20 @@
         return done();
       });
     });
-    return it("findById with id = 2 returns the Prototype pattern");
+    it("findById with id = 2 returns the Prototype pattern", function(done) {
+      return daoObj.findById(2, function(err, item) {
+        item.should.have.property('name', 'Prototype');
+        return done();
+      });
+    });
+    return it.only("insert new pattern (Factory Method) must the pattern", function(done) {
+      return daoObj.insert(new_pattern, function(err, item) {
+        var doc;
+        doc = item[0];
+        doc.should.have.property('name', 'Factory Method');
+        return done();
+      });
+    });
   });
 
 }).call(this);

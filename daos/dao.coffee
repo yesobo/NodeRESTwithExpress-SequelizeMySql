@@ -16,18 +16,27 @@ module.exports = class MongoDBConnector
 	#call: callback parameters are (err, collection)
 	initTransaction = (callback) ->
 		if @db._state == 'connected'
+			console.log "Conection opened"
 			@db.collection @dbName, callback
 		else
+			console.log "opening connection..."
 			privateDb = @db
 			privateDBName = @dbName
 			@db.open (err, p_client) ->
-				privateDb.authenticate 'admin', '1234', (err) ->
-					privateDb.collection privateDBName, callback
+				if err?
+					console.log "ERROR opening connection: #{err}"
+				else	
+					console.log "connection opened"
+					console.log "authenticating..."
+					privateDb.authenticate 'admin', '1234', (err) ->
+						console.log "autenticated!"
+						privateDb.collection privateDBName, callback
 
 	#call: callback parameters are (err, items)
 	findAll: (callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
+				console.log "ERROR!"
 				callback err, null
 			else
 				collection.find().toArray (err, items) ->
@@ -37,6 +46,7 @@ module.exports = class MongoDBConnector
 	count: (callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
+				console.log "ERROR"
 				callback err, null
 			else
 				collection.count (err, count) ->
@@ -44,15 +54,21 @@ module.exports = class MongoDBConnector
 
 	#call: callback parameters are (err, item)
 	findById: (pId, callback) ->
-		initTransaction (err, collection) ->
-			collection.findOne id:pId, (err, item) ->
-				callback err, item
+		initTransaction.call this, (err, collection) ->
+			if err?
+				console.log "ERROR!"
+				callback err, null
+			else
+				collection.findOne id:pId, (err, item) ->
+					callback err, item
 
 	#call: callback parameters are (err, doc)
 	insert: (pattern, callback) ->
-		initTransaction (err, collection) ->
-			collection.count (err, count) ->
-				pattern.id = count + 1
+		initTransaction.call this, (err, collection) ->
+			if err?
+				console.log "ERROR!"
+				callback err, null
+			else
 				collection.insert pattern, (err, doc) ->
 					callback err, doc
 

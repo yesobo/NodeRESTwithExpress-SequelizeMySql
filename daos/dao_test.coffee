@@ -7,6 +7,15 @@ should = require "#{modules_url}/should"
 
 describe 'Tests for MongoDBConnector', ->
 	daoObj = null
+	new_pattern = {
+		"id": 3,
+		"name": "Factory Method",
+		"category": "Creational",
+		"intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
+		"motivation": "",
+		"applicability": "",
+		"structure": ""
+	};
 	beforeEach ->
 		daoObj = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 10001
 	it 'Can be instatiated with paraneters', (done) ->
@@ -26,7 +35,12 @@ describe 'Tests for MongoDBConnector', ->
 		daoObj.count (err, count) ->
 			should.strictEqual count, 2
 			done()
-	it "findById with id = 2 returns the Prototype pattern"
-		daoObj.findById (err, item) ->
-			item.name.should.be.equals "Prototype"
+	it "findById with id = 2 returns the Prototype pattern", (done) ->
+		daoObj.findById 2, (err, item) ->
+			item.should.have.property 'name', 'Prototype'
+			done()
+	it.only "insert new pattern (Factory Method) must the pattern", (done) ->
+		daoObj.insert new_pattern, (err, item) ->
+			doc = item[0]
+			doc.should.have.property 'name', 'Factory Method'
 			done()

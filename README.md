@@ -4,7 +4,7 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 
-- On daos branch, continue testing the MongoDBConnector with mocha on dao/dao_test.coffee. continue with insert, add delete test before inserting because we need to delete after inserting test.
+- merge dao branch with master branch and mongoHQdb branch
 
 - Test return error codes.
 

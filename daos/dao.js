@@ -102,31 +102,40 @@
     };
 
     MongoDBConnector.prototype.update = function(pattern, callback) {
-      return initTransaction(function(err, collection) {
-        return collection.update({
-          id: pattern.id
-        }, {
-          $set: {
-            name: pattern.name,
-            category: pattern.category,
-            intent: pattern.intent,
-            motivation: pattern.motivation,
-            applicability: pattern.applicability,
-            structure: pattern.structure
-          }
-        }, function(err) {
-          return callback(err, pattern);
-        });
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          console.log("ERROR!");
+          return callback(err, null);
+        } else {
+          return collection.update({
+            id: pattern.id
+          }, {
+            $set: {
+              name: pattern.name,
+              category: pattern.category,
+              intent: pattern.intent,
+              motivation: pattern.motivation,
+              applicability: pattern.applicability,
+              structure: pattern.structure
+            }
+          }, function(err) {
+            return callback(err);
+          });
+        }
       });
     };
 
     MongoDBConnector.prototype["delete"] = function(pId, callback) {
-      return initTransaction(function(err, collection) {
-        return collection.remove({
-          id: pId
-        }, function(err, removed) {
-          return callback(err, removed);
-        });
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          return console.log("ERROR!");
+        } else {
+          return collection.remove({
+            id: pId
+          }, function(err) {
+            return callback(err);
+          });
+        }
       });
     };
 

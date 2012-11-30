@@ -39,8 +39,21 @@ describe 'Tests for MongoDBConnector', ->
 		daoObj.findById 2, (err, item) ->
 			item.should.have.property 'name', 'Prototype'
 			done()
-	it.only "insert new pattern (Factory Method) must the pattern", (done) ->
-		daoObj.insert new_pattern, (err, item) ->
-			doc = item[0]
-			doc.should.have.property 'name', 'Factory Method'
+	it "insert new_pattern (Factory Method) returns the pattern", (done) ->
+		daoObj.insert new_pattern, (err, docs) ->
+			docs[0].should.have.property 'name', new_pattern.name
 			done()
+
+	it "update new_pattern returns the pattern updated", (done) ->
+		new_name = "Modified Name"
+		new_pattern.name = new_name;
+		daoObj.update new_pattern, (err) ->
+			daoObj.findById new_pattern.id, (err, item) ->
+				item.should.have.property 'name', new_name
+				done()
+
+	it "delete new_pattern returns the removed alement", (done) ->
+		daoObj.delete new_pattern.id, (err) ->
+			daoObj.count (err, count) ->
+				should.strictEqual count, 2
+				done()

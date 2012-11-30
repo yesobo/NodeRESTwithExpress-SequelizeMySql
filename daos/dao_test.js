@@ -53,12 +53,29 @@
         return done();
       });
     });
-    return it.only("insert new pattern (Factory Method) must the pattern", function(done) {
-      return daoObj.insert(new_pattern, function(err, item) {
-        var doc;
-        doc = item[0];
-        doc.should.have.property('name', 'Factory Method');
+    it("insert new_pattern (Factory Method) returns the pattern", function(done) {
+      return daoObj.insert(new_pattern, function(err, docs) {
+        docs[0].should.have.property('name', new_pattern.name);
         return done();
+      });
+    });
+    it("update new_pattern returns the pattern updated", function(done) {
+      var new_name;
+      new_name = "Modified Name";
+      new_pattern.name = new_name;
+      return daoObj.update(new_pattern, function(err) {
+        return daoObj.findById(new_pattern.id, function(err, item) {
+          item.should.have.property('name', new_name);
+          return done();
+        });
+      });
+    });
+    return it("delete new_pattern returns the removed alement", function(done) {
+      return daoObj["delete"](new_pattern.id, function(err) {
+        return daoObj.count(function(err, count) {
+          should.strictEqual(count, 2);
+          return done();
+        });
       });
     });
   });

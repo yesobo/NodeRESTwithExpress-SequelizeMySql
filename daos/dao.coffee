@@ -72,22 +72,29 @@ module.exports = class MongoDBConnector
 				collection.insert pattern, (err, doc) ->
 					callback err, doc
 
-	#call: callback parameters are (err, pattern)
+	#call: callback parameters are (err)
 	update: (pattern, callback) ->
-		initTransaction (err, collection) ->
-			collection.update id:pattern.id,
-				$set:
-					name: pattern.name
-					category: pattern.category
-					intent: pattern.intent
-					motivation: pattern.motivation
-					applicability: pattern.applicability
-					structure: pattern.structure,
-				(err) ->
-					callback err, pattern
+		initTransaction.call this, (err, collection) ->
+			if err?
+				console.log "ERROR!"
+				callback err, null
+			else
+				collection.update id:pattern.id,
+					$set:
+						name: pattern.name
+						category: pattern.category
+						intent: pattern.intent
+						motivation: pattern.motivation
+						applicability: pattern.applicability
+						structure: pattern.structure,
+					(err) ->
+						callback err
 
-	#call: callback parameters are (err, removed)
+	#call: callback parameters are (err)
 	delete: (pId, callback) ->
-		initTransaction (err, collection) ->
-			collection.remove id:pId, (err, removed) ->
-				callback err, removed
+		initTransaction.call this, (err, collection) ->
+			if err?
+				console.log "ERROR!"
+			else	
+				collection.remove id:pId, (err) ->
+					callback err

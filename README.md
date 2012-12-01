@@ -4,7 +4,7 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 
-- merge dao branch with master branch and mongoHQdb branch
+- merge mongoHQdb branch with master branch
 
 - Test return error codes.
 

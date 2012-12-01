@@ -11,7 +11,7 @@
   */
 
 
-  MongoDBConnector = (function() {
+  module.exports = MongoDBConnector = (function() {
     var initTransaction;
 
     function MongoDBConnector(dbName, host, port) {
@@ -21,78 +21,121 @@
       this.db = new mongodb.Db(this.dbName, new mongodb.Server(this.host, this.port, {
         auto_reconnect: true
       }), {});
-      this.db.open(function(err, p_client) {
-        return this.db.authenticate('admin', '1234', function(err) {});
-      });
     }
 
     initTransaction = function(callback) {
-      return this.db.collection(this.dbName, callback);
+      var privateDBName, privateDb;
+      if (this.db._state === 'connected') {
+        console.log("Conection opened");
+        return this.db.collection(this.dbName, callback);
+      } else {
+        console.log("opening connection...");
+        privateDb = this.db;
+        privateDBName = this.dbName;
+        return this.db.open(function(err, p_client) {
+          if (err != null) {
+            return console.log("ERROR opening connection: " + err);
+          } else {
+            console.log("connection opened");
+            console.log("authenticating...");
+            return privateDb.authenticate('admin', '1234', function(err) {
+              console.log("autenticated!");
+              return privateDb.collection(privateDBName, callback);
+            });
+          }
+        });
+      }
     };
 
     MongoDBConnector.prototype.findAll = function(callback) {
-      return initTransaction(function(err, collection) {
-        return collection.find().toArray(function(err, items) {
-          return callback(err, items);
-        });
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          console.log("ERROR!");
+          return callback(err, null);
+        } else {
+          return collection.find().toArray(function(err, items) {
+            return callback(err, items);
+          });
+        }
       });
     };
 
     MongoDBConnector.prototype.count = function(callback) {
-      return initTransaction(function(err, collection) {
-        return collection.count(function(err, count) {
-          return callback(err, count);
-        });
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          console.log("ERROR");
+          return callback(err, null);
+        } else {
+          return collection.count(function(err, count) {
+            return callback(err, count);
+          });
+        }
       });
     };
 
     MongoDBConnector.prototype.findById = function(pId, callback) {
-      return initTransaction(function(err, collection) {
-        return collection.findOne({
-          id: pId
-        }, function(err, item) {
-          return callback(err, item);
-        });
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          console.log("ERROR!");
+          return callback(err, null);
+        } else {
+          return collection.findOne({
+            id: pId
+          }, function(err, item) {
+            return callback(err, item);
+          });
+        }
       });
     };
 
     MongoDBConnector.prototype.insert = function(pattern, callback) {
-      return initTransaction(function(err, collection) {
-        return collection.count(function(err, count) {
-          pattern.id = count + 1;
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          console.log("ERROR!");
+          return callback(err, null);
+        } else {
           return collection.insert(pattern, function(err, doc) {
             return callback(err, doc);
           });
-        });
+        }
       });
     };
 
     MongoDBConnector.prototype.update = function(pattern, callback) {
-      return initTransaction(function(err, collection) {
-        return collection.update({
-          id: pattern.id
-        }, {
-          $set: {
-            name: pattern.name,
-            category: pattern.category,
-            intent: pattern.intent,
-            motivation: pattern.motivation,
-            applicability: pattern.applicability,
-            structure: pattern.structure
-          }
-        }, function(err) {
-          return callback(err, pattern);
-        });
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          console.log("ERROR!");
+          return callback(err, null);
+        } else {
+          return collection.update({
+            id: pattern.id
+          }, {
+            $set: {
+              name: pattern.name,
+              category: pattern.category,
+              intent: pattern.intent,
+              motivation: pattern.motivation,
+              applicability: pattern.applicability,
+              structure: pattern.structure
+            }
+          }, function(err) {
+            return callback(err);
+          });
+        }
       });
     };
 
     MongoDBConnector.prototype["delete"] = function(pId, callback) {
-      return initTransaction(function(err, collection) {
-        return collection.remove({
-          id: pId
-        }, function(err, removed) {
-          return callback(err, removed);
-        });
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          return console.log("ERROR!");
+        } else {
+          return collection.remove({
+            id: pId
+          }, function(err) {
+            return callback(err);
+          });
+        }
       });
     };
 

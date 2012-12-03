@@ -3,9 +3,11 @@ express = require 'express'
 # Create Application Server
 app = express()
 # Set Route Init Path
-routes = "./routes.js"
+#routes = "./routes.js"
+routes = "./routesMongoHQ.js"
 # Set Database Init Path
-database = "./database.js"
+#database = "./database.js"
+database = "./mongoHQdb.js"
 
 ###
 app

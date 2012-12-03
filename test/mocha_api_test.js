@@ -87,7 +87,7 @@ describe('Tests for patterns API, ', function() {
 		request(del_options, cb);
 	};
 
-	describe.only('Get all patterns test', function(){
+	describe('Get all patterns test', function(){
 		it('should be successful.', function(done){
 			request.get(url + '/api/patterns', function (err, res, body) {
 				if(err) {

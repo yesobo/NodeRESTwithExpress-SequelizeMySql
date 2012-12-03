@@ -4,15 +4,13 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 
-- merge mongoHQdb branch with master branch
-
-- Test return error codes.
-
-- New branch daos.
+- Apply the daos branch purposes on master branch .
 	- convert database and routes files in one routes file and multiple dao files.
 		- finish mongo dao exporting it.
 
-- New branch mongoHQdb:
+- Test return error codes.
+
+- New branch mongoHQdb (it will possibly dissapear because of daos branch improvements):
 	- still test error responses.
 
 - Api integration tests:

@@ -1,52 +1,49 @@
-# Adds a pattern to the db
-addPattern = (pattern, cb) ->
-	db.collection 'design_patterns', (err, collection) ->
-		collection.count (err, count) ->
-			pattern.id = count + 1
-			collection.insert pattern, (err, doc) ->
-				cb()
+MongoDBConnector = require "./daos/dao.js"
+daoObj = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 10001
 
 # GET all patterns
 app.get '/api/patterns', (req, res) ->
-	db.collection 'design_patterns', (err, collection) ->
-		collection.find().toArray (err, items)->
-			res.send items
+	daoObj.findAll (err, items) ->			
+		res.send items
 
 # GET the number of patterns
 app.get '/api/patterns/count', (req, res) ->
-	db.collection('design_patterns', (err, collection) ->
-		collection.count (err, count)->
-			res.send count.toString()
-		)
+	daoObj.count (err, count) ->
+		res.send count.toString()
 
 # GET pattern by id
 app.get '/api/patterns/:id', (req, res) ->
+	console.log "getting pattern..."
+	console.log "req: #{req.params}"
 	intId = parseInt req.params.id
-	db.collection 'design_patterns', (err, collection) ->
-		collection.findOne id:intId , (err, item)->
-			if err?
-				res.send 500	
+	console.log intId
+	console.log "calling findById..."
+	daoObj.findById intId, (err, item) ->
+		console.log "result: #{item}"
+		if err?
+			res.send 500	
+		else
+			if item?
+				res.send item
 			else
-				if item?
-					res.send item
-				else
-					res.send 404
+				res.send 404
 
 # POST a new pattern
 app.post '/api/patterns', (req, res) ->
 	new_pattern = 
-		id: null # generated automattically
+		id: req.body.id
 		name: req.body.name
 		category: req.body.category
 		intent: req.body.intent
 		motivation: req.body.motivation
 		applicability: req.body.applicability
 		structure: req.body.structure
-	addPattern new_pattern, () ->
-		res.send new_pattern
+	daoObj.insert new_pattern, (err, docs) ->
+		res.send 200
 
 # PUT upgrade pattern by id
 app.put '/api/patterns/:id', (req, res) ->
+	console.log "executing app.put"
 	intId = parseInt req.params.id
 	updated_pattern =
 		name: req.body.name
@@ -55,27 +52,18 @@ app.put '/api/patterns/:id', (req, res) ->
 		motivation: req.body.motivation
 		applicability: req.body.applicability
 		structure: req.body.structure
-	db.collection 'design_patterns', (err, collection) ->
-		collection.update id:intId, 
-			$set: 
-				name: updated_pattern.name
-				category: updated_pattern.category
-				intent: updated_pattern.intent
-				motivation: updated_pattern.motivation
-				applicability: updated_pattern.applicability
-				structure: updated_pattern.structure,
-			(err) ->
-				if err? 
-					res.send 404
-				else
-					res.send updated_pattern
+	daoObj.update updated_pattern, (err) ->
+		if err? 
+			res.send 404
+		else
+			daoObj.findById updated_pattern intId, (err, item) ->
+				res.send item
 
 # DELETE delete product by id
 app.del '/api/patterns/:id', (req, res) ->
 	intId = parseInt req.params.id
-	db.collection 'design_patterns', (err, collection) ->
-		collection.remove id:intId, (err, removed) ->
-			if err?
-				res.send 500
-			else
-				res.send removed
+	daoObj.delete intId, (err) ->
+		if err?
+			res.send 500
+		else
+			res.send 200

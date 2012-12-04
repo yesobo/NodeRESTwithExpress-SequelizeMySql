@@ -54,12 +54,15 @@ module.exports = class MongoDBConnector
 
 	#call: callback parameters are (err, item)
 	findById: (pId, callback) ->
+		console.log "init: findById"
 		initTransaction.call this, (err, collection) ->
 			if err?
 				console.log "ERROR!"
 				callback err, null
 			else
+				console.log "id = #{pId}"
 				collection.findOne id:pId, (err, item) ->
+					console.log "findOne callback: error: #{err}, item: #{item}"
 					callback err, item
 
 	#call: callback parameters are (err, doc)

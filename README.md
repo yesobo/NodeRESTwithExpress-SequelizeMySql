@@ -4,9 +4,9 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 
-- Apply the daos branch purposes on master branch .
-	- convert database and routes files in one routes file and multiple dao files.
-		- finish mongo dao exporting it.
+- (in process) Apply the daos branch purposes on master branch.
+	- (in process) convert database and routes files in one routes file and multiple dao files.
+		- pass all mocha_api_test.js tests.
 
 - Test return error codes.
 

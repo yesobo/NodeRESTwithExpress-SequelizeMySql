@@ -74,14 +74,17 @@
     };
 
     MongoDBConnector.prototype.findById = function(pId, callback) {
+      console.log("init: findById");
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
           console.log("ERROR!");
           return callback(err, null);
         } else {
+          console.log("id = " + pId);
           return collection.findOne({
             id: pId
           }, function(err, item) {
+            console.log("findOne callback: error: " + err + ", item: " + item);
             return callback(err, item);
           });
         }

@@ -66,9 +66,9 @@
       if (err != null) {
         return res.send(404);
       } else {
-        return daoObj.findById(updated_pattern(intId, function(err, item) {
+        return daoObj.findById(intId, function(err, item) {
           return res.send(item);
-        }));
+        });
       }
     });
   });

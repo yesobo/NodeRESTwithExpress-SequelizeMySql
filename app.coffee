@@ -4,7 +4,7 @@ express = require 'express'
 app = express()
 # Set dao init path
 #database = "./database.js"
-routes = "./routesMongoHQ.js"
+routes = "./routes.js"
 
 ###
 app
@@ -73,4 +73,4 @@ app.get '/api', (req, res)=>
 routes = require routes
 # HTTP Server
 app.listen port
-console.log "Express Server listening on port #{port} in #{app.settings.env} mode using Sequelize ORM."
+console.log "Express Server listening on port #{port} in #{app.settings.env} mode."

@@ -150,7 +150,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	describe.only('Insert new pattern with id = 3', function() {
+	describe('Insert new pattern with id = 3', function() {
 		it('should be succesful', function(done){
 			var post_options = {
 				method: 'POST',
@@ -198,6 +198,21 @@ describe('Tests for patterns API, ', function() {
 				done();
 			};
 			request(post_options, put_callback);
+		});
+	});
+
+	describe('Delete pattern with id = 3 test', function() {
+		it('should be succesful', function(error, res, body) {
+			var post_options = {
+				method: 'DEL',
+				uri: url + '/api/patterns/3',
+				port: 8010
+			};
+			var del_callback = function(error, res, body) {
+				res.statusCode.should.be.equal(200);
+				done();
+			};
+			request(post_options, del_callback);
 		});
 	});
 });

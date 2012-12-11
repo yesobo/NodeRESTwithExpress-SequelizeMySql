@@ -6,7 +6,11 @@ TODO:
 
 - (in process) Apply the daos branch purposes on master branch.
 	- (in process) convert database and routes files in one routes file and multiple dao files.
-		- pass all mocha_api_test.js tests.
+		- pass all mocha_api_test.js tests. (delete is failing)
+		- improve the tests at mocha_api_test.js. They are almost only checking the return code.
+		- convert database.coffee/js, routesSequelize.coffe/js and models.coffee/js on daos/SequelizeDao.coffe/js
+
+- organize files as: http://openmymind.net/NodeJS-Module-Exports-And-Organizing-Express-Routes/
 
 - Test return error codes.
 

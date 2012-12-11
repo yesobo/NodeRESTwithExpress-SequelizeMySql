@@ -51,7 +51,7 @@ app.put '/api/patterns/:id', (req, res) ->
 		if err? 
 			res.send 404
 		else
-			daoObj.findById updated_pattern intId, (err, item) ->
+			daoObj.findById intId, (err, item) ->
 				res.send item
 
 # DELETE delete product by id

@@ -2,12 +2,9 @@
 express = require 'express'
 # Create Application Server
 app = express()
-# Set Route Init Path
-#routes = "./routes.js"
-routes = "./routesMongoHQ.js"
-# Set Database Init Path
+# Set dao init path
 #database = "./database.js"
-database = "./mongoHQdb.js"
+routes = "./routesMongoHQ.js"
 
 ###
 app
@@ -72,12 +69,6 @@ app.configure 'production', ->
 app.get '/api', (req, res)=>
 	res.send 'Ecomm API is running'
 
-###
-db (database)
-@type {Object}
-@param Object [database_options] the database options
-###
-GLOBAL.db = require(database)(database_options)
 # Routes
 routes = require routes
 # HTTP Server

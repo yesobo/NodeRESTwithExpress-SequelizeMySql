@@ -1,4 +1,5 @@
 DBConnector = require "./daos/mongoHQDao.js"
+util = require 'util'
 daoObj = new DBConnector 'design_patterns', 'alex.mongohq.com', 10001
 
 # GET all patterns
@@ -15,7 +16,6 @@ app.get '/api/patterns/count', (req, res) ->
 app.get '/api/patterns/:id', (req, res) ->
 	intId = parseInt req.params.id
 	daoObj.findById intId, (err, item) ->
-		console.log "result: #{item}"
 		if err?
 			res.send 500	
 		else
@@ -26,8 +26,9 @@ app.get '/api/patterns/:id', (req, res) ->
 
 # POST a new pattern
 app.post '/api/patterns', (req, res) ->
+	intId = parseInt req.body.id
 	new_pattern = 
-		id: req.body.id
+		id: intId
 		name: req.body.name
 		category: req.body.category
 		intent: req.body.intent

@@ -202,9 +202,9 @@ describe('Tests for patterns API, ', function() {
 	});
 
 	describe('Delete pattern with id = 3 test', function() {
-		it('should be succesful', function(error, res, body) {
+		it('should be succesful', function(done) {
 			var post_options = {
-				method: 'DEL',
+				method: 'DELETE',
 				uri: url + '/api/patterns/3',
 				port: 8010
 			};
@@ -212,7 +212,7 @@ describe('Tests for patterns API, ', function() {
 				res.statusCode.should.be.equal(200);
 				done();
 			};
-			request(post_options, del_callback);
+			request.del(post_options, del_callback);
 		});
 	});
 });

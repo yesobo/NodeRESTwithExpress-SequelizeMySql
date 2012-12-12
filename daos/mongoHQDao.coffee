@@ -1,5 +1,6 @@
 #npm install mongodb
 mongodb = require 'mongodb'
+util = require 'util'
 
 ###
 Use:
@@ -72,6 +73,7 @@ module.exports = class MongoDBConnector
 				console.log "ERROR!"
 				callback err, null
 			else
+				console.log "inserting pattern: #{util.inspect(pattern)}"
 				collection.insert pattern, (err, doc) ->
 					callback err, doc
 
@@ -95,9 +97,11 @@ module.exports = class MongoDBConnector
 
 	#call: callback parameters are (err)
 	delete: (pId, callback) ->
+		console.log "INIT: daoObj delete"
 		initTransaction.call this, (err, collection) ->
 			if err?
 				console.log "ERROR!"
 			else	
+				console.log "removing element with id = #{pId}"
 				collection.remove id:pId, (err) ->
 					callback err

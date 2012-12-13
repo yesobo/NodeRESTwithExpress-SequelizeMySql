@@ -57,6 +57,7 @@
     var intId, updated_pattern;
     intId = parseInt(req.params.id);
     updated_pattern = {
+      id: intId,
       name: req.body.name,
       category: req.body.category,
       intent: req.body.intent,

@@ -55,15 +55,12 @@ module.exports = class MongoDBConnector
 
 	#call: callback parameters are (err, item)
 	findById: (pId, callback) ->
-		console.log "init: findById"
 		initTransaction.call this, (err, collection) ->
 			if err?
 				console.log "ERROR!"
 				callback err, null
 			else
-				console.log "id = #{pId}"
 				collection.findOne id:pId, (err, item) ->
-					console.log "findOne callback: error: #{err}, item: #{item}"
 					callback err, item
 
 	#call: callback parameters are (err, doc)
@@ -73,7 +70,6 @@ module.exports = class MongoDBConnector
 				console.log "ERROR!"
 				callback err, null
 			else
-				console.log "inserting pattern: #{util.inspect(pattern)}"
 				collection.insert pattern, (err, doc) ->
 					callback err, doc
 
@@ -97,11 +93,10 @@ module.exports = class MongoDBConnector
 
 	#call: callback parameters are (err)
 	delete: (pId, callback) ->
-		console.log "INIT: daoObj delete"
 		initTransaction.call this, (err, collection) ->
 			if err?
 				console.log "ERROR!"
+				callback err
 			else	
-				console.log "removing element with id = #{pId}"
 				collection.remove id:pId, (err) ->
 					callback err

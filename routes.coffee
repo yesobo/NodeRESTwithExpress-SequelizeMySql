@@ -42,6 +42,7 @@ app.post '/api/patterns', (req, res) ->
 app.put '/api/patterns/:id', (req, res) ->
 	intId = parseInt req.params.id
 	updated_pattern =
+		id: intId
 		name: req.body.name
 		category: req.body.category
 		intent: req.body.intent

@@ -14,8 +14,8 @@ var test_pattern1 = {
     "structure": "Cambiar por BLOB"
   };
 
-var test_pattern1_modif = {
-    "id": 1,
+var test_pattern3_modif = {
+    "id": 3,
     "name": "MODIF Singleton",
     "category": "MODIF Creational",
     "intent": "MODIF Ensure a class only has one instance, and provide a global point of acg cess to it",
@@ -47,13 +47,11 @@ var test_pattern2 = {
 describe('Tests for patterns API, ', function() {
 
 	var testIfExists = function(test_pattern, cb) {
-		console.log("looking for pattern.id = " + test_pattern.id);
 		request.get(url + '/api/patterns/' + test_pattern.id, function (err, res, body) {
 			if(err) {
 				done(err);
 			}
 			else {
-				console.log(res.statusCode);
 				res.statusCode.should.be.equal(200);
 				should.exist(body);
 				var pattern = JSON.parse(body);
@@ -90,7 +88,7 @@ describe('Tests for patterns API, ', function() {
 	};
 
 	describe('Get all patterns test', function(){
-		it('should be successful.', function(done){
+		it('should return statusCode 200 and a json object with the 2 test elements', function(done){
 			request.get(url + '/api/patterns', function (err, res, body) {
 				if(err) {
 					done(err);
@@ -102,22 +100,6 @@ describe('Tests for patterns API, ', function() {
 					var patterns = JSON.parse(body);
 					patterns.should.be.an.instanceOf(Array);
 					patterns.should.have.length(2);
-					
-					var aux_pattern;
-					for (var i = 0; i < patterns.length; i++) {
-						if (i === 0) {
-							aux_pattern = test_pattern1;
-						} else {
-							aux_pattern = test_pattern2;
-						}
-						patterns[i].id = aux_pattern.id;
-						patterns[i].name = aux_pattern.name;
-						patterns[i].category = aux_pattern.category;
-						patterns[i].intent = aux_pattern.intent;
-						patterns[i].motivation = aux_pattern.motivation;
-						patterns[i].applicability = aux_pattern.applicability;
-						patterns[i].structure = aux_pattern.structure;
-					}
 					done();
 				}
 			});
@@ -125,7 +107,7 @@ describe('Tests for patterns API, ', function() {
 	});
 
 	describe('Get number of patterns test', function(){
-		it('should be successful.', function(done){
+		it('should return statusCode 200 and "2".', function(done){
 			request.get(url + '/api/patterns/count', function (err, res, body) {
 				if(err) {
 					done(err);
@@ -143,7 +125,7 @@ describe('Tests for patterns API, ', function() {
 	});
 
 	describe('Get pattern with id = 1 test', function() {
-		it('should be succesful', function(done){
+		it('should return the test_pattern1 element', function(done){
 			testIfExists(test_pattern1, function() {
 				done();
 			});
@@ -151,7 +133,7 @@ describe('Tests for patterns API, ', function() {
 	});
 
 	describe('Insert new pattern with id = 3', function() {
-		it('should be succesful', function(done){
+		it('should return statusCode 200 and our new_pattern object must be in our collection', function(done){
 			var post_options = {
 				method: 'POST',
 				uri: url + '/api/patterns',
@@ -163,31 +145,21 @@ describe('Tests for patterns API, ', function() {
 			};
 			var post_callback = function(error, res, body) {
 				res.statusCode.should.be.equal(200);
-				/*
 				// Check if new_pattern is in the db
-				// ¡IT DOES'NT WORK! maybe due to 2 consecutive requests
 				testIfExists(new_pattern, function() {
-					console.log("deleting pattern");
-					deletePatternById(new_pattern.id, function() {
-						console.log("testing absense");
-						testIfNotExists(new_pattern, function() {
-							done();
-						});
-					});
+					done();
 				});
-				*/
-				done();
 			};
 			request(post_options, post_callback);
 		});
 	});
 
-	describe('Update pattern with id = 1 test', function() {
-		it('should be succesful', function(done){
+	describe('Update pattern with id = 3 test', function() {
+		it('should return status code 200 and must have changed the element at our collection', function(done){
 			var post_options = {
 				method: 'PUT',
-				uri: url + '/api/patterns/1',
-				form: test_pattern1,
+				uri: url + '/api/patterns/3',
+				form: test_pattern3_modif,
 				port: 8010,
 				headers: {
 					"Content-Type": "application/json"
@@ -195,24 +167,22 @@ describe('Tests for patterns API, ', function() {
 			};
 			var put_callback = function(error, res, body) {
 				res.statusCode.should.be.equal(200);
-				done();
+				testIfExists(test_pattern3_modif, function() {
+					done();
+				});
 			};
 			request(post_options, put_callback);
 		});
 	});
 
+
 	describe('Delete pattern with id = 3 test', function() {
-		it('should be succesful', function(done) {
-			var post_options = {
-				method: 'DELETE',
-				uri: url + '/api/patterns/3',
-				port: 8010
-			};
-			var del_callback = function(error, res, body) {
-				res.statusCode.should.be.equal(200);
-				done();
-			};
-			request.del(post_options, del_callback);
+		it('should return statusCode 200 and it must not be int our collection', function(done) {
+			deletePatternById(new_pattern.id, function() {
+				testIfNotExists(new_pattern, function() {
+					done();
+				});
+			});
 		});
 	});
 });

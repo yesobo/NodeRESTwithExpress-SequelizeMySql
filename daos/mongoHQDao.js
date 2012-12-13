@@ -76,17 +76,14 @@
     };
 
     MongoDBConnector.prototype.findById = function(pId, callback) {
-      console.log("init: findById");
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
           console.log("ERROR!");
           return callback(err, null);
         } else {
-          console.log("id = " + pId);
           return collection.findOne({
             id: pId
           }, function(err, item) {
-            console.log("findOne callback: error: " + err + ", item: " + item);
             return callback(err, item);
           });
         }
@@ -99,7 +96,6 @@
           console.log("ERROR!");
           return callback(err, null);
         } else {
-          console.log("inserting pattern: " + (util.inspect(pattern)));
           return collection.insert(pattern, function(err, doc) {
             return callback(err, doc);
           });
@@ -132,12 +128,11 @@
     };
 
     MongoDBConnector.prototype["delete"] = function(pId, callback) {
-      console.log("INIT: daoObj delete");
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
-          return console.log("ERROR!");
+          console.log("ERROR!");
+          return callback(err);
         } else {
-          console.log("removing element with id = " + pId);
           return collection.remove({
             id: pId
           }, function(err) {

@@ -13,6 +13,8 @@ TODO:
 - New branch mongoHQdb (it will possibly dissapear because of daos branch improvements):
 	- still test error responses.
 
+- Run tests on [testacular](https://github.com/vojtajina/testacular/)
+
 - Api integration tests:
 	- Create a test with Jasmine. 
 	- finish tests with vows, qUnit and mocha including error codes.

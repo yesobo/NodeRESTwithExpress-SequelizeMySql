@@ -12,7 +12,7 @@ module.exports = class MongoDBConnector
 	# host = 'alex.mongohq.com'
 	# port = 10001
 	constructor: (@dbName, @host, @port) ->
-		@db = new mongodb.Db(@dbName, new mongodb.Server(@host, @port, {auto_reconnect:true}), {});
+		@db = new mongodb.Db(@dbName, new mongodb.Server(@host, @port, {auto_reconnect:true}), {safe:true})
 
 	#call: callback parameters are (err, collection)
 	initTransaction = (callback) ->
@@ -63,6 +63,16 @@ module.exports = class MongoDBConnector
 				collection.findOne id:pId, (err, item) ->
 					callback err, item
 
+	#call: callback parameters are (err, item)
+	findByName: (name, callback) ->
+		initTransaction.call this, (err, collection) ->
+			if err?
+				console.log "ERROR!"
+				callback err, null
+			else
+				collection.findOne name:name, (err, item) ->
+					callback err, item
+
 	#call: callback parameters are (err, doc)
 	insert: (pattern, callback) ->
 		initTransaction.call this, (err, collection) ->
@@ -80,9 +90,8 @@ module.exports = class MongoDBConnector
 				console.log "ERROR!"
 				callback err, null
 			else
-				collection.update id:pattern.id,
+				collection.update name:pattern.name,
 					$set:
-						name: pattern.name
 						category: pattern.category
 						intent: pattern.intent
 						motivation: pattern.motivation
@@ -92,11 +101,21 @@ module.exports = class MongoDBConnector
 						callback err
 
 	#call: callback parameters are (err)
-	delete: (pId, callback) ->
+	delete: (pName, callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
 				console.log "ERROR!"
 				callback err
 			else	
-				collection.remove id:pId, (err) ->
+				collection.remove name:pName, (err) ->
+					callback err
+
+	#call: callback parameters are (err)
+	deleteAll: (callback) ->
+		initTransaction.call this, (err, collection) ->
+			if err?
+				console.log "ERROR!"
+				callback err
+			else
+				collection.remove {}, (err) ->
 					callback err

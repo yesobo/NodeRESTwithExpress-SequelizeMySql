@@ -22,7 +22,9 @@
       this.port = port;
       this.db = new mongodb.Db(this.dbName, new mongodb.Server(this.host, this.port, {
         auto_reconnect: true
-      }), {});
+      }), {
+        safe: true
+      });
     }
 
     initTransaction = function(callback) {
@@ -90,6 +92,21 @@
       });
     };
 
+    MongoDBConnector.prototype.findByName = function(name, callback) {
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          console.log("ERROR!");
+          return callback(err, null);
+        } else {
+          return collection.findOne({
+            name: name
+          }, function(err, item) {
+            return callback(err, item);
+          });
+        }
+      });
+    };
+
     MongoDBConnector.prototype.insert = function(pattern, callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
@@ -110,10 +127,9 @@
           return callback(err, null);
         } else {
           return collection.update({
-            id: pattern.id
+            name: pattern.name
           }, {
             $set: {
-              name: pattern.name,
               category: pattern.category,
               intent: pattern.intent,
               motivation: pattern.motivation,
@@ -127,15 +143,28 @@
       });
     };
 
-    MongoDBConnector.prototype["delete"] = function(pId, callback) {
+    MongoDBConnector.prototype["delete"] = function(pName, callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
           console.log("ERROR!");
           return callback(err);
         } else {
           return collection.remove({
-            id: pId
+            name: pName
           }, function(err) {
+            return callback(err);
+          });
+        }
+      });
+    };
+
+    MongoDBConnector.prototype.deleteAll = function(callback) {
+      return initTransaction.call(this, function(err, collection) {
+        if (err != null) {
+          console.log("ERROR!");
+          return callback(err);
+        } else {
+          return collection.remove({}, function(err) {
             return callback(err);
           });
         }

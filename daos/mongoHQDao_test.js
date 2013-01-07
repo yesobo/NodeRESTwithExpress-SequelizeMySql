@@ -4,17 +4,36 @@
 
   modules_url = '../node_modules';
 
-  MongoDBConnector = require("./dao.js");
+  MongoDBConnector = require("./mongoHQDao.js");
 
   mongodb = require('mongodb');
 
   should = require("" + modules_url + "/should");
 
   describe('Tests for MongoDBConnector', function() {
-    var daoObj, new_pattern;
+    var daoObj, in_db_patterns_names, new_pattern, test_pattern1, test_pattern2;
     daoObj = null;
+    in_db_patterns_names = {
+      "Singleton": "Singleton",
+      "Prototype": "Prototype"
+    };
+    test_pattern1 = {
+      "name": "Singleton",
+      "category": "Creational",
+      "intent": "Ensure a class only has one instance, and provide a global point of acg cess to it",
+      "motivation": "It's important for some classes to have exactly one instance. Making a class responsible for keepintrack of its sole instance.",
+      "applicability": "there must be exactly one instance of a class, and it must be accessible.\\nwhen the sole instance should be extensible by subclassing, and clients",
+      "structure": "Cambiar por BLOB"
+    };
+    test_pattern2 = {
+      "name": "Prototype",
+      "category": "Creational",
+      "intent": "Specify the kinds of objects to create using a prototypical instance, and create",
+      "motivation": "Use the Prototype Pattern when a client needs to create  a set of",
+      "applicability": "Use the Prototype pattern when a system should be independent of how its products",
+      "structure": "Cambiar por BLOB"
+    };
     new_pattern = {
-      "id": 3,
       "name": "Factory Method",
       "category": "Creational",
       "intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
@@ -22,6 +41,22 @@
       "applicability": "",
       "structure": ""
     };
+    before(function(done) {
+      daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
+      console.log("deleting collection...");
+      return daoObj.deleteAll(function(err) {
+        console.log("collection deleted.");
+        console.log("inserting pattern1");
+        return daoObj.insert(test_pattern1, function(err, docs) {
+          console.log("pattern1 inserted");
+          console.log("inserting pattern2");
+          return daoObj.insert(test_pattern2, function(err, docs) {
+            console.log("DB restarted");
+            return done();
+          });
+        });
+      });
+    });
     beforeEach(function() {
       return daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
     });
@@ -47,9 +82,9 @@
         return done();
       });
     });
-    it("findById with id = 2 returns the Prototype pattern", function(done) {
-      return daoObj.findById(2, function(err, item) {
-        item.should.have.property('name', 'Prototype');
+    it("findByName with name = 'Singleton' returns the Singleton pattern", function(done) {
+      return daoObj.findByName(in_db_patterns_names.Singleton, function(err, item) {
+        item.should.have.property('name', 'Singleton');
         return done();
       });
     });
@@ -60,20 +95,34 @@
       });
     });
     it("update new_pattern returns the pattern updated", function(done) {
-      var new_name;
-      new_name = "Modified Name";
-      new_pattern.name = new_name;
+      var new_category;
+      new_category = "Modified Category";
+      new_pattern.category = new_category;
       return daoObj.update(new_pattern, function(err) {
-        return daoObj.findById(new_pattern.id, function(err, item) {
-          item.should.have.property('name', new_name);
+        return daoObj.findByName(new_pattern.name, function(err, item) {
+          item.should.have.property('category', new_category);
           return done();
         });
       });
     });
-    return it("delete new_pattern returns the removed alement", function(done) {
-      return daoObj["delete"](new_pattern.id, function(err) {
+    it("delete new_pattern makes the db to have the original elements", function(done) {
+      return daoObj["delete"](new_pattern.name, function(err) {
         return daoObj.count(function(err, count) {
           should.strictEqual(count, 2);
+          return daoObj.findAll(function(err, items) {
+            items.should.be.an.instanceOf(Array);
+            items.should.have.length(2);
+            in_db_patterns_names.should.have.property(items[0].name);
+            in_db_patterns_names.should.have.property(items[1].name);
+            return done();
+          });
+        });
+      });
+    });
+    return it("deleteAll results on an empty collection", function(done) {
+      return daoObj.deleteAll(function(err) {
+        return daoObj.count(function(err, count) {
+          should.strictEqual(count, 0);
           return done();
         });
       });

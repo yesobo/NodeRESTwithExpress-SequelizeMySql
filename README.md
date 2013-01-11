@@ -4,6 +4,7 @@ Node.js REST Service to MySql Local database with Express + Sequelize
 TODO:
 =====
 
+- https://kanbanflow.com/board/57b0cbae7ac915c37d6cf121ea567fb8
 - (in process) Apply the daos branch purposes on master branch.
 	- (in process) convert database and routes files in one routes file and multiple dao files.
 		- improve the tests at mocha_api_test.js. 
@@ -13,10 +14,7 @@ TODO:
 
 - organize files as: http://openmymind.net/NodeJS-Module-Exports-And-Organizing-Express-Routes/
 
-- Test return error codes.
-
 - New branch mongoHQdb (it will possibly dissapear because of daos branch improvements):
-	- still test error responses.
 
 - Api integration tests:
 	- Create a test with Jasmine. 

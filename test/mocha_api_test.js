@@ -1,11 +1,12 @@
 var modules_url = '../node_modules';
 var request = require(modules_url + '/request'),
 	should = require(modules_url + '/should');
+	util = require('util'),
+	MongoDBConnector = require('../daos/mongoHQDao.js');
 
-var url = 'http://localhost:8010';
+var url = 'http://localhost:8010/api';
 
 var test_pattern1 = {
-    "id": 1,
     "name": "Singleton",
     "category": "Creational",
     "intent": "Ensure a class only has one instance, and provide a global point of acg cess to it",
@@ -15,17 +16,15 @@ var test_pattern1 = {
   };
 
 var test_pattern3_modif = {
-    "id": 3,
-    "name": "MODIF Singleton",
+    "name": "Singleton",
     "category": "MODIF Creational",
     "intent": "MODIF Ensure a class only has one instance, and provide a global point of acg cess to it",
     "motivation": "MODIF It's important for some classes to have exactly one instance. Making a class responsible for keepintrack of its sole instance.",
     "applicability": "MODIF there must be exactly one instance of a class, and it must be accessible.\\nwhen the sole instance should be extensible by subclassing, and clients",
     "structure": "MODIF Cambiar por BLOB"
-	};
+};
 
 var test_pattern2 = {
-    "id": 2,
     "name": "Prototype",
     "category": "Creational",
     "intent": "Specify the kinds of objects to create using a prototypical instance, and create",
@@ -34,20 +33,30 @@ var test_pattern2 = {
     "structure": "Cambiar por BLOB"
   };
 
- var new_pattern = {
-		"id": 3,
-		"name": "Factory Method",
-		"category": "Creational",
-		"intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
-		"motivation": "",
-		"applicability": "",
-		"structure": ""
-	};
+var test_pattern4_modif = {
+    "name": "Prototype",
+    "category": "MODIF Creational",
+    "intent": "MODIF Specify the kinds of objects to create using a prototypical instance, and create",
+    "motivation": "MODIF Use the Prototype Pattern when a client needs to create  a set of",
+    "applicability": "MODIF Use the Prototype pattern when a system should be independent of how its products",
+    "structure": "MODIF Cambiar por BLOB"
+};
+ 
+var new_pattern = {
+	"name": "Factory Method",
+	"category": "Creational",
+	"intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
+	"motivation": "",
+	"applicability": "",
+	"structure": ""
+};
 
 describe('Tests for patterns API, ', function() {
 
+	/* Makes a GET request to /patterns/:name where name is the first parameter's name,
+		and checks that the returned object is the same as the first parameter */
 	var testIfExists = function(test_pattern, cb) {
-		request.get(url + '/api/patterns/' + test_pattern.id, function (err, res, body) {
+		request.get(url + '/patterns/' + test_pattern.name, function (err, res, body) {
 			if(err) {
 				done(err);
 			}
@@ -55,7 +64,6 @@ describe('Tests for patterns API, ', function() {
 				res.statusCode.should.be.equal(200);
 				should.exist(body);
 				var pattern = JSON.parse(body);
-				pattern.should.have.property('id', test_pattern.id);
 				pattern.should.have.property('name', test_pattern.name);
 				pattern.should.have.property('category', test_pattern.category);
 				pattern.should.have.property('intent', test_pattern.intent);
@@ -68,16 +76,16 @@ describe('Tests for patterns API, ', function() {
 	};
 
 	var testIfNotExists = function(test_pattern, cb) {
-		request.get(url + '/api/patterns/' + test_pattern.id, function (err, res, body) {
+		request.get(url + '/patterns/' + test_pattern.name, function (err, res, body) {
 			res.statusCode.should.be.equal(404);
 			cb();
 		});
 	};
 
-	var deletePatternById = function(id, cb) {
+	var deletePatternByName = function(pName, cb) {
 		var del_options = {
 			method: 'DELETE',
-			uri: url + '/api/patterns/3',
+			uri: url + '/patterns/' + pName,
 			form: new_pattern,
 			port: 8010,
 			headers: {
@@ -87,9 +95,27 @@ describe('Tests for patterns API, ', function() {
 		request(del_options, cb);
 	};
 
-	describe('Get all patterns test', function(){
-		it('should return statusCode 200 and a json object with the 2 test elements', function(done){
-			request.get(url + '/api/patterns', function (err, res, body) {
+	// Restart the DB with 2 test objects
+	before(function(done) {
+		var daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
+		console.log("deleting collection...");
+		daoObj.deleteAll( function(err) {
+			console.log("collection deleted.");
+			console.log("inserting pattern1");
+			daoObj.insert(test_pattern1, function(err, docs) {
+				console.log("pattern1 inserted");
+				console.log("inserting pattern2");
+				daoObj.insert(test_pattern2, function(err, docs) {
+					console.log("DB restarted");
+					done();
+				});
+			});
+		});
+	});
+	
+	describe('Read patterns list with GET /patterns', function(){
+		it('should return statusCode 200 and a json array with the 2 test elements', function(done){
+			request.get(url + '/patterns', function (err, res, body) {
 				if(err) {
 					done(err);
 				}
@@ -106,9 +132,9 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	describe('Get number of patterns test', function(){
+	describe('Count patterns with GET /patterns/count ', function(){
 		it('should return statusCode 200 and "2".', function(done){
-			request.get(url + '/api/patterns/count', function (err, res, body) {
+			request.get(url + '/patterns/count', function (err, res, body) {
 				if(err) {
 					done(err);
 				}
@@ -124,19 +150,41 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	describe('Get pattern with id = 1 test', function() {
-		it('should return the test_pattern1 element', function(done){
+	describe('Get pattern by name with GET /patterns/' + test_pattern1.name + ' ', function() {
+		it('should return 200 and the specified element', function(done){
 			testIfExists(test_pattern1, function() {
 				done();
 			});
 		});
 	});
 
-	describe('Insert new pattern with id = 3', function() {
-		it('should return statusCode 200 and our new_pattern object must be in our collection', function(done){
+	describe('Add new pattern with POST ' + new_pattern + ' to /patterns/'  + new_pattern.name + ' ', function() {
+		it('should return statusCode 404 and our new_pattern object must NOT be in our db', function(done){
 			var post_options = {
 				method: 'POST',
-				uri: url + '/api/patterns',
+				uri: url + '/patterns/' + new_pattern.name,
+				form: new_pattern,
+				port: 8010,
+				headers: {
+					"Content-Type": "application/json"
+				}
+			};
+			var post_callback = function(error, res, body) {
+				res.statusCode.should.be.equal(404);
+				// Check if new_pattern is in the db
+				testIfNotExists(new_pattern, function() {
+					done();
+				});
+			};
+			request(post_options, post_callback);
+		});
+	});
+
+	describe('Add new pattern with POST ' + new_pattern + ' to /patterns ', function() {
+		it('should return statusCode 200 and our new_pattern object must be in our db', function(done){
+			var post_options = {
+				method: 'POST',
+				uri: url + '/patterns',
 				form: new_pattern,
 				port: 8010,
 				headers: {
@@ -154,11 +202,11 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	describe('Update pattern with id = 3 test', function() {
+	describe('Update pattern with PUT '+ test_pattern3_modif + ' to /patterns/ ' + test_pattern3_modif.name + ' ', function() {
 		it('should return status code 200 and must have changed the element at our collection', function(done){
 			var post_options = {
 				method: 'PUT',
-				uri: url + '/api/patterns/3',
+				uri: url + '/patterns/' + test_pattern3_modif.name,
 				form: test_pattern3_modif,
 				port: 8010,
 				headers: {
@@ -168,21 +216,90 @@ describe('Tests for patterns API, ', function() {
 			var put_callback = function(error, res, body) {
 				res.statusCode.should.be.equal(200);
 				testIfExists(test_pattern3_modif, function() {
-					done();
+					post_options.form = test_pattern1;
+					request(post_options, function() {
+						done();
+					});
 				});
 			};
 			request(post_options, put_callback);
 		});
 	});
 
-
-	describe('Delete pattern with id = 3 test', function() {
-		it('should return statusCode 200 and it must not be int our collection', function(done) {
-			deletePatternById(new_pattern.id, function() {
+	describe('Delete pattern with DEL /patterns/ ' + new_pattern.name + ' ', function() {
+		it('should return statusCode 200 and it must not be in our collection', function(done) {
+			deletePatternByName(new_pattern.name, function(err, res, body) {
+				res.statusCode.should.be.equal(200);
 				testIfNotExists(new_pattern, function() {
 					done();
 				});
 			});
 		});
 	});
+
+	describe('Bulk update patterns with PUT a "patterns" JSON collection to /patterns ', function() {
+		var col;
+		/* creates the collection */
+		before(function() {
+			col = {
+				patterns: []
+			};
+			col.patterns.push(test_pattern1); // Modifies Singleton
+			col.patterns.push(test_pattern4_modif); // Modifies Prototype
+			col.patterns.push(new_pattern); // Is not in the DB
+		});
+
+		it('should return 200 and the number updated patterns', function(done) {
+			var post_options = {
+				method: 'PUT',
+				uri: url + '/patterns',
+				body: JSON.stringify(col),
+				port: 8010,
+				headers: {
+					"Content-Type": "application/json"
+				}
+			};
+
+			var put_callback = function(error, res, body) {
+				res.statusCode.should.be.equal(200);
+				res.should.be.json;
+				should.exist(body);
+				var responseCol = JSON.parse(body);
+				should.strictEqual(responseCol.updated_patterns, 2);
+				done();
+			};
+			request(post_options, put_callback);
+		});
+		it('the patterns must have been updated when checked.', function(done) {
+			testIfExists(test_pattern1, function() {
+				testIfExists(test_pattern4_modif, function() {
+					done();
+				});
+			});
+		});
+		it('only updates the patterns that match by name.', function(done) {
+			testIfNotExists(new_pattern, function() {
+				done();
+			});
+		});
+	});
+
+	describe('Bulk delete patterns with DEL to /patterns ', function() {
+		it('should return 200 and our db should be empty. ', function(done) {
+			var del_options = {
+				method: 'DELETE',
+				uri: url + '/patterns',
+				port: 8010
+			};
+			request(del_options, function(err, req, body) {
+				req.statusCode.should.be.equal(200);
+				request.get(url + '/patterns/count', function (err, res, body) {
+					var count = parseInt(body);
+					count.should.equal(0);
+					done();
+				});
+			});
+		});
+	});
+
 });

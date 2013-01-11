@@ -54,16 +54,6 @@ module.exports = class MongoDBConnector
 					callback err, count
 
 	#call: callback parameters are (err, item)
-	findById: (pId, callback) ->
-		initTransaction.call this, (err, collection) ->
-			if err?
-				console.log "ERROR!"
-				callback err, null
-			else
-				collection.findOne id:pId, (err, item) ->
-					callback err, item
-
-	#call: callback parameters are (err, item)
 	findByName: (name, callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
@@ -71,44 +61,77 @@ module.exports = class MongoDBConnector
 				callback err, null
 			else
 				collection.findOne name:name, (err, item) ->
+					if !item?
+						err = 404
+						item = {"message": "document not found"}	
 					callback err, item
 
 	#call: callback parameters are (err, doc)
 	insert: (pattern, callback) ->
-		initTransaction.call this, (err, collection) ->
-			if err?
-				console.log "ERROR!"
-				callback err, null
-			else
-				collection.insert pattern, (err, doc) ->
-					callback err, doc
+		if !pattern.name? or pattern.name == ""
+			err = 400
+			item = {'message': 'You must insert an id value'}
+			callback err, item
+		else
+			initTransaction.call this, (err, collection) ->
+				if err?
+					console.log "ERROR!"
+					callback err, null
+				else
+					collection.findOne name:pattern.name, (err, item) ->
+						if item?
+							err = 400
+							item = {"message": "A document already exists with that id"}	
+							callback err, item
+						else
+							collection.insert pattern, (err, doc) ->
+								callback err, doc
 
-	#call: callback parameters are (err)
+
+	#call: callback parameters are (err, item)
 	update: (pattern, callback) ->
+		name = pattern.name
+		new_cat = pattern.category
+		new_intent = pattern.intent
+		new_motiv = pattern.motivation
+		new_appli = pattern.applicability
+		new_struc = pattern.structure
 		initTransaction.call this, (err, collection) ->
 			if err?
 				console.log "ERROR!"
 				callback err, null
 			else
-				collection.update name:pattern.name,
-					$set:
-						category: pattern.category
-						intent: pattern.intent
-						motivation: pattern.motivation
-						applicability: pattern.applicability
-						structure: pattern.structure,
-					(err) ->
-						callback err
+				collection.findOne name:name, (err, item) ->
+					if item?
+						collection.update name:name,
+							$set:
+								category: new_cat
+								intent: new_intent
+								motivation: new_motiv
+								applicability: new_appli
+								structure: new_struc,
+							(err, item) ->
+								callback err, item
+					else
+						err = 404
+						item = {"message": "document not found"}
+						callback err, item
 
-	#call: callback parameters are (err)
+	#call: callback parameters are (err, item)
 	delete: (pName, callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
 				console.log "ERROR!"
-				callback err
-			else	
-				collection.remove name:pName, (err) ->
-					callback err
+				callback err, "DB error"
+			else
+				collection.findOne name:pName, (err, item) ->
+					if item?
+						collection.remove name:pName, (err) ->
+							callback err, {"message": "item removed"}
+					else
+						err = 404
+						item = {"message": "document not found"}
+						callback err, item
 
 	#call: callback parameters are (err)
 	deleteAll: (callback) ->

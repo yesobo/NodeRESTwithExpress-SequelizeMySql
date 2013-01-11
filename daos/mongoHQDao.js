@@ -77,21 +77,6 @@
       });
     };
 
-    MongoDBConnector.prototype.findById = function(pId, callback) {
-      return initTransaction.call(this, function(err, collection) {
-        if (err != null) {
-          console.log("ERROR!");
-          return callback(err, null);
-        } else {
-          return collection.findOne({
-            id: pId
-          }, function(err, item) {
-            return callback(err, item);
-          });
-        }
-      });
-    };
-
     MongoDBConnector.prototype.findByName = function(name, callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
@@ -101,6 +86,12 @@
           return collection.findOne({
             name: name
           }, function(err, item) {
+            if (!(item != null)) {
+              err = 404;
+              item = {
+                "message": "document not found"
+              };
+            }
             return callback(err, item);
           });
         }
@@ -108,36 +99,76 @@
     };
 
     MongoDBConnector.prototype.insert = function(pattern, callback) {
-      return initTransaction.call(this, function(err, collection) {
-        if (err != null) {
-          console.log("ERROR!");
-          return callback(err, null);
-        } else {
-          return collection.insert(pattern, function(err, doc) {
-            return callback(err, doc);
-          });
-        }
-      });
+      var err, item;
+      if (!(pattern.name != null) || pattern.name === "") {
+        err = 400;
+        item = {
+          'message': 'You must insert an id value'
+        };
+        return callback(err, item);
+      } else {
+        return initTransaction.call(this, function(err, collection) {
+          if (err != null) {
+            console.log("ERROR!");
+            return callback(err, null);
+          } else {
+            return collection.findOne({
+              name: pattern.name
+            }, function(err, item) {
+              if (item != null) {
+                err = 400;
+                item = {
+                  "message": "A document already exists with that id"
+                };
+                return callback(err, item);
+              } else {
+                return collection.insert(pattern, function(err, doc) {
+                  return callback(err, doc);
+                });
+              }
+            });
+          }
+        });
+      }
     };
 
     MongoDBConnector.prototype.update = function(pattern, callback) {
+      var name, new_appli, new_cat, new_intent, new_motiv, new_struc;
+      name = pattern.name;
+      new_cat = pattern.category;
+      new_intent = pattern.intent;
+      new_motiv = pattern.motivation;
+      new_appli = pattern.applicability;
+      new_struc = pattern.structure;
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
           console.log("ERROR!");
           return callback(err, null);
         } else {
-          return collection.update({
-            name: pattern.name
-          }, {
-            $set: {
-              category: pattern.category,
-              intent: pattern.intent,
-              motivation: pattern.motivation,
-              applicability: pattern.applicability,
-              structure: pattern.structure
+          return collection.findOne({
+            name: name
+          }, function(err, item) {
+            if (item != null) {
+              return collection.update({
+                name: name
+              }, {
+                $set: {
+                  category: new_cat,
+                  intent: new_intent,
+                  motivation: new_motiv,
+                  applicability: new_appli,
+                  structure: new_struc
+                }
+              }, function(err, item) {
+                return callback(err, item);
+              });
+            } else {
+              err = 404;
+              item = {
+                "message": "document not found"
+              };
+              return callback(err, item);
             }
-          }, function(err) {
-            return callback(err);
           });
         }
       });
@@ -147,12 +178,26 @@
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
           console.log("ERROR!");
-          return callback(err);
+          return callback(err, "DB error");
         } else {
-          return collection.remove({
+          return collection.findOne({
             name: pName
-          }, function(err) {
-            return callback(err);
+          }, function(err, item) {
+            if (item != null) {
+              return collection.remove({
+                name: pName
+              }, function(err) {
+                return callback(err, {
+                  "message": "item removed"
+                });
+              });
+            } else {
+              err = 404;
+              item = {
+                "message": "document not found"
+              };
+              return callback(err, item);
+            }
           });
         }
       });

@@ -60,7 +60,7 @@
     beforeEach(function() {
       return daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
     });
-    it('Can be instatiated with paraneters', function(done) {
+    it.only('Can be instatiated with paraneters', function(done) {
       daoObj.should.have.property('dbName', 'design_patterns');
       daoObj.should.have.property('host', 'alex.mongohq.com');
       daoObj.should.have.property('port', 10001);
@@ -69,7 +69,7 @@
       daoObj.db.should.be.an["instanceof"](mongodb.Db);
       return done();
     });
-    it('findAll returns my collection', function(done) {
+    it('findAll returns the collection', function(done) {
       return daoObj.findAll(function(err, items) {
         items.should.be.an.instanceOf(Array);
         items.should.have.length(2);
@@ -82,31 +82,67 @@
         return done();
       });
     });
-    it("findByName with name = 'Singleton' returns the Singleton pattern", function(done) {
+    it("findByName with name = " + in_db_patterns_names.Singleton + " returns the " + in_db_patterns_names.Singleton + " pattern", function(done) {
       return daoObj.findByName(in_db_patterns_names.Singleton, function(err, item) {
         item.should.have.property('name', 'Singleton');
         return done();
       });
     });
-    it("insert new_pattern (Factory Method) returns the pattern", function(done) {
+    it("findByName with name = 'NoPattern' returns 404 error and {'message': 'document not found'}", function(done) {
+      return daoObj.findByName('NoPattern', function(err, item) {
+        should.strictEqual(err, 404);
+        item.should.have.property('message', 'document not found');
+        return done();
+      });
+    });
+    it("insert a new document (" + new_pattern.name + ") returns the document", function(done) {
       return daoObj.insert(new_pattern, function(err, docs) {
         docs[0].should.have.property('name', new_pattern.name);
         return done();
       });
     });
-    it("update new_pattern returns the pattern updated", function(done) {
-      var new_category;
+    it("insert existing document with name = " + in_db_patterns_names.Singleton, function(done) {
+      return daoObj.insert(test_pattern1, function(err, docs) {
+        should.strictEqual(err, 400);
+        docs.should.have.property('message', 'A document already exists with that id');
+        return done();
+      });
+    });
+    it("insert document with empty name returns 400 error and message", function(done) {
+      test_pattern1.name = "";
+      daoObj.insert(test_pattern1, function(err, docs) {
+        should.strictEqual(err, 400);
+        docs.should.have.property('message', 'You must insert an id value');
+        return done();
+      });
+      return test_pattern1.name = "Singleton";
+    });
+    it("update the existing document '" + new_pattern.name + "' changes the document at database", function(done) {
+      var new_category, old_category;
+      old_category = new_pattern.category;
       new_category = "Modified Category";
       new_pattern.category = new_category;
-      return daoObj.update(new_pattern, function(err) {
+      daoObj.update(new_pattern, function(err, item) {
         return daoObj.findByName(new_pattern.name, function(err, item) {
           item.should.have.property('category', new_category);
           return done();
         });
       });
+      return new_pattern.category = old_category;
     });
-    it("delete new_pattern makes the db to have the original elements", function(done) {
-      return daoObj["delete"](new_pattern.name, function(err) {
+    it("update the document 'NoDocument' (does'nt exist) returns 404 and document not found", function(done) {
+      var old_name;
+      old_name = new_pattern.name;
+      new_pattern.name = 'NoDocument';
+      daoObj.update(new_pattern, function(err, item) {
+        should.strictEqual(err, 404);
+        item.should.have.property('message', "document not found");
+        return done();
+      });
+      return new_pattern.name = old_name;
+    });
+    it("delete the existing document '" + new_pattern.name + "' makes the db to have the original elements", function(done) {
+      return daoObj["delete"](new_pattern.name, function(err, item) {
         return daoObj.count(function(err, count) {
           should.strictEqual(count, 2);
           return daoObj.findAll(function(err, items) {
@@ -117,6 +153,13 @@
             return done();
           });
         });
+      });
+    });
+    it("delete the document 'NoDocument' (does'nt exist) returns 404 and document not found", function(done) {
+      return daoObj["delete"]('NoDocument', function(err, item) {
+        should.strictEqual(err, 404);
+        item.should.have.property('message', "document not found");
+        return done();
       });
     });
     return it("deleteAll results on an empty collection", function(done) {

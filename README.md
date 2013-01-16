@@ -45,9 +45,48 @@ express-resource is NOT COMPATIBLE with express3 so I used express for the routi
 ----------------
 API
 ===
-- GET api/patterns: 			get all the patterns as JSON
+- /patterns (GET)
+-----------------
+- **DESCRIPTION** 	Returns all patterns
+- **URL STRUCTURE** 	`...[api_url]/patterns`
+- **METHOD**		GET
+- **RETURNS**		A list of all patterns patterns on the current revision
+			The HTTP response contains all patterns in a JSON array
+
+*Sample JSON return value*  
+	[  
+	  {  
+	    "name": "Singleton",  
+    	    "category": "Creational",  
+    	    "intent": "Ensure a class only has one instance, and provide a global point of acg cess to it",  
+    	    "motivation": "It's important for some classes to have exactly one instance. Making a class responsible for keepintrack of its sole instance.",  
+    	    "applicability": "there must be exactly one instance of a class, and it must be accessible.\\nwhen the sole instance should be extensible by subclassing, and clients",  
+    	    "structure": "Cambiar por BLOB",  
+    	    "_id": "50f6f74fe4f707ca70000001"  
+  	  },  
+  	  {  
+    	    "name": "Prototype",  
+    	    "category": "Creational",  
+    	    "intent": "Specify the kinds of objects to create using a prototypical instance, and create",  
+    	    "motivation": "Use the Prototype Pattern when a client needs to create  a set of",  
+    	    "applicability": "Use the Prototype pattern when a system should be independent of how its products",  
+    	    "structure": "Cambiar por BLOB",  
+    	    "_id": "50f6f74fe4f707ca70000002"  
+  	  }  
+	]
+- **ERRORS**		
+
+- /patterns (POST)	
+-----------------
+- **DESCRIPTION** 	insert new pattern
+- **URL STRUCTURE** 	`...[api_url]/patterns`
+- **METHOD**		POST
+- **RETURNS**		All database patterns on the current revision
+			The HTTP response contains all patterns in a JSON array
+- **ERRORS**		
+
+
 - GET api/patterns/count: get the number of patterns as text
 - GET api/patterns/{id}: 	get pattern by id as JSON
-- POST api/patterns: 			insert new pattern
 - PUT api/patterns/{id}: 	update pattern by id
 - DELETE api/pattern/{id}:delete pattern by id

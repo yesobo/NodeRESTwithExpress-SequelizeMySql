@@ -94,10 +94,10 @@ API
 - **METHOD**		GET
 - **RETURNS**		Number of patterns in our database in text/html; charset=utf-8 format
 
-- /patterns/:id (GET)
+- /patterns/:name (GET)
 -----------------
 - **DESCRIPTION** 	Returns information about the pattern specified by the name parameter
-- **URL STRUCTURE** 	`...[api_url]/patterns`
+- **URL STRUCTURE** 	`...[api_url]/patterns/:name`
 - **METHOD**		GET
 - **PARAMETERS**        _name:_ Used to specify the name of the pattern to be returned
 - **RETURNS**		A JSON object with information about the parameter specified by the :name attribute.
@@ -115,7 +115,32 @@ API
     }</pre>
 - **ERRORS**           404 The pattern specified by the name parameter does'nt exist in the database
 
+- /patterns/:name (PUT)
+-----------------
+- **DESCRIPTION** 	Updates the pattern specified by the name parameter
+- **URL STRUCTURE** 	`...[api_url]/patterns/:name`
+- **METHOD**		PUT
+- **PARAMETERS**        _name:_ Used to specify the name of the pattern to be updated
+- **REQUEST BODY**      _required_ A JSON object containing the new information about the pattern to be updated
+- **RETURNS**		A JSON object with the new information about the updated parameter specified by the :name attribute.
 
+    *Sample JSON return value*  
+<pre>
+    {
+        "name": "Singleton",
+        "category": "Creational",
+        "intent": "Ensure a class only has one instance, and provide a global point of acg cess to it",
+        "motivation": "It's important for some classes to have exactly one instance. Making a class responsible for keepintrack of its sole instance.",
+        "applicability": "there must be exactly one instance of a class, and it must be accessible.\\nwhen the sole instance should be extensible by subclassing, and clients",
+        "structure": "Cambiar por BLOB",
+        "_id": "50f6f74fe4f707ca70000001"
+    }</pre>
+- **ERRORS**           404 The pattern specified by the name parameter does'nt exist in the database
 
-- PUT api/patterns/{id}: 	update pattern by id
-- DELETE api/pattern/{id}:delete pattern by id
+- /patterns/:name (DEL)
+-----------------
+- **DESCRIPTION** 	Deletes the pattern specified by the name parameter
+- **URL STRUCTURE** 	`...[api_url]/patterns/:name`
+- **METHOD**		DEL
+- **PARAMETERS**        _name:_ Used to specify the name of the pattern to be deleted
+- **ERRORS**           500 There was an error deleting the specified pattern.

@@ -80,12 +80,28 @@ API
 
 - /patterns (POST)	
 -----------------
-- **DESCRIPTION** 	inserts new pattern
+- **DESCRIPTION** 	inserts a new pattern
 - **URL STRUCTURE** 	`...[api_url]/patterns`
 - **METHOD**		POST
 - **REQUEST BODY**      _required_ A JSON object with the new pattern's data with unless the __name__ field
 - **RETURNS**		status code 200
 - **ERRORS**		400  Error inserting pattern
+
+- /patterns (PUT)	
+-----------------
+- **DESCRIPTION** 	updates a collection of patterns
+- **URL STRUCTURE** 	`...[api_url]/patterns`
+- **METHOD**		PUT
+- **REQUEST BODY**      _required_ A JSON array object with the collecion of patterns to be updated.
+- **RETURNS**		a JSON object with the number of total updated patterns
+
+- /patterns/:name (DEL)
+-----------------
+- **DESCRIPTION** 	Deletes all patterns.
+- **URL STRUCTURE** 	`...[api_url]/patterns`
+- **METHOD**		DEL
+- **RETURNS**           a JSON object with the number of total deleted patterns.
+
 
 - /patterns/count (GET)	
 -----------------

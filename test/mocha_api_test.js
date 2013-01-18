@@ -285,7 +285,7 @@ describe('Tests for patterns API, ', function() {
 	});
 
 	describe('Bulk delete patterns with DEL to /patterns ', function() {
-		it('should return 200 and our db should be empty. ', function(done) {
+		it('should return 200 a JSON object {"deleted_patterns": 2} and our db should be empty. ', function(done) {
 			var del_options = {
 				method: 'DELETE',
 				uri: url + '/patterns',
@@ -293,6 +293,8 @@ describe('Tests for patterns API, ', function() {
 			};
 			request(del_options, function(err, req, body) {
 				req.statusCode.should.be.equal(200);
+				var resp = JSON.parse(body);
+				resp.should.have.property("deleted_patterns", 2);
 				request.get(url + '/patterns/count', function (err, res, body) {
 					var count = JSON.parse(body);
 					count.should.have.property("number_of_patterns", 0);

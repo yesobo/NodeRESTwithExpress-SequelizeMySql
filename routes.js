@@ -127,7 +127,7 @@
           return res.send(err);
         } else {
           return res.send(200, {
-            "message": "" + count + " patterns deleted"
+            "deleted_patterns": count
           });
         }
       });

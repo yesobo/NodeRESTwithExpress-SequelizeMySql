@@ -90,5 +90,5 @@ app.del '/api/patterns', (req, res) ->
 			if err?
 				res.send err
 			else
-				res.send 200, "message": "#{count} patterns deleted"
+				res.send 200, "deleted_patterns": count
 

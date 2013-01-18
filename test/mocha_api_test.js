@@ -132,7 +132,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	describe.only('Count patterns with GET /patterns/count ', function(){
+	describe('Count patterns with GET /patterns/count ', function(){
 		it('should return statusCode 200 and a JSON object {"number_of_patterns": 2}.', function(done){
 			request.get(url + '/patterns/count', function (err, res, body) {
 				if(err) {
@@ -294,8 +294,8 @@ describe('Tests for patterns API, ', function() {
 			request(del_options, function(err, req, body) {
 				req.statusCode.should.be.equal(200);
 				request.get(url + '/patterns/count', function (err, res, body) {
-					var count = parseInt(body);
-					count.should.equal(0);
+					var count = JSON.parse(body);
+					count.should.have.property("number_of_patterns", 0);
 					done();
 				});
 			});

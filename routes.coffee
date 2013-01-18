@@ -38,7 +38,7 @@ app.put '/api/patterns', (req, res) ->
 # GET the number of patterns
 app.get '/api/patterns/count', (req, res) ->
 	daoObj.count (err, count) ->
-		res.send count.toString()
+		res.send {"number_of_patterns": count}
 
 # GET pattern by key(name)
 app.get '/api/patterns/:name', (req, res) ->

@@ -132,8 +132,8 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	describe('Count patterns with GET /patterns/count ', function(){
-		it('should return statusCode 200 and "2".', function(done){
+	describe.only('Count patterns with GET /patterns/count ', function(){
+		it('should return statusCode 200 and a JSON object {"number_of_patterns": 2}.', function(done){
 			request.get(url + '/patterns/count', function (err, res, body) {
 				if(err) {
 					done(err);
@@ -142,8 +142,8 @@ describe('Tests for patterns API, ', function() {
 					res.statusCode.should.be.equal(200);
 					res.should.be.http;
 					should.exist(body);
-					var count = parseInt(body);
-					count.should.equal(2);
+					var resp = JSON.parse(body);
+					resp.should.have.property("number_of_patterns", 2);
 					done();
 				}
 			});

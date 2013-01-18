@@ -59,7 +59,9 @@
 
   app.get('/api/patterns/count', function(req, res) {
     return daoObj.count(function(err, count) {
-      return res.send(count.toString());
+      return res.send({
+        "number_of_patterns": count
+      });
     });
   });
 

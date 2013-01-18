@@ -45,8 +45,8 @@ NOTES:
 
 express-resource is NOT COMPATIBLE with express3 so I used express for the routings
 ----------------
-API
-===
+API reference
+=============
 - /patterns (GET)
 -----------------
 - **DESCRIPTION** 	Returns all patterns

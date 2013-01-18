@@ -97,6 +97,12 @@ API
 - **REQUEST BODY**      _required_ A JSON array object with the collecion of patterns to be updated.
 - **RETURNS**		a JSON object with the number of total updated patterns
 
+    *Sample JSON return value*  
+<pre>
+    {
+        "updated_patterns": 2
+    }</pre>
+
 - /patterns/:name (DEL)
 -----------------
 - **DESCRIPTION** 	Deletes all patterns.
@@ -104,13 +110,24 @@ API
 - **METHOD**		DEL
 - **RETURNS**           a JSON object with the number of total deleted patterns.
 
+    *Sample JSON return value*  
+<pre>
+    {
+        "deleted_patterns": 3
+    }</pre>
 
 - /patterns/count (GET)	
 -----------------
 - **DESCRIPTION** 	returns the number of patterns
 - **URL STRUCTURE** 	`...[api_url]/patterns/count`
 - **METHOD**		GET
-- **RETURNS**		Number of patterns in our database in text/html; charset=utf-8 format
+- **RETURNS**		A JSON object with the number of patterns in our database.
+
+    *Sample JSON return value*  
+<pre>
+    {
+        "number_of_patterns": 4
+    }</pre>
 
 - /patterns/:name (GET)
 -----------------

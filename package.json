@@ -1,7 +1,7 @@
 {
-  "name": "npm",
-  "version": "0.0.0",
-  "description": "node.js REST to mySql",
+  "name": "codderns",
+  "version": "0.0.1",
+  "description": "patterns RESTful API in node.js wiht Mysql/MongoHQ DB",
   "main": "app.js",
   "dependencies": {
     "express-resource": "~0.2.4",
@@ -9,12 +9,33 @@
     "sequelize": "~1.5.0"
   },
   "devDependencies": {
-    "coffee-script": "~1.3.3"
+    "grunt": "~0.3.17",
+    "grunt-contrib-jshint": "~0.1.0",
+    "grunt-contrib-nodeunit": "~0.1.0",
+    "coffee-script": "~1.3.3",
+    "grunt-contrib-uglify": "~0.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "",
-  "author": "",
-  "license": "BSD"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yesobo/NodeRESTwithExpress-SequelizeMySql.git"
+  },
+  "author": "yesobo",
+  "license": "BSD",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "design",
+    "patterns",
+    "patterns",
+    "API",
+    "codderns",
+    "API",
+    "RESTful",
+    "patterns",
+    "API"
+  ]
 }

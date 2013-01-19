@@ -1,8 +1,7 @@
-Node.js REST Service to MySql Local database with Express + Sequelize
-=====================================================================
-----------------
-TODO:
-=====
+#Node.js RESTful API with MySql/MongoHQ database with Express + Sequelize#
+_______________
+##TODO:##
+_______________
 
 - https://kanbanflow.com/board/57b0cbae7ac915c37d6cf121ea567fb8
 - (in process) Apply the daos branch purposes on master branch.
@@ -23,8 +22,8 @@ TODO:
 	- finish tests with vows, qUnit and mocha including error codes.
 	- Document API REST with swagger
 
-References:
-===========
+##References:##
+_______________
 - Uses Sequelize (http://www.sequelizejs.com/). Good file design but uses express-resource: http://www.ziggytech.net/technology/web-development/experiences-with-node-js-porting-a-restful-service-written-in-java/
 
 - Create a REST service with express3 (instead of express-resource), testing with jQuery: http://pixelhandler.com/blog/2012/02/09/develop-a-restful-api-using-node-js-with-express-and-mongoose/
@@ -35,20 +34,20 @@ References:
 
 - Testing with QUnit (the only one with good ajax testing) http://www.ajaxprojects.com/ajax/tutorialdetails.php?itemid=894
 
-NOTES:
-=====
+##NOTES:##
+______
 - Server created at http://localhost:8010
 - CoffeeScript implemented.
 - Tested with mocha + request + should.js (see TODO)
 - Tested with vows + request + assert (see TODO)
 - Tested with QUnit (see TODO)
 
-express-resource is NOT COMPATIBLE with express3 so I used express for the routings
-----------------
-API reference
-=============
-- /patterns (GET)
------------------
+**express-resource is NOT COMPATIBLE with express3 so I used express for the routings**
+
+##API reference##
+_________________
+###/patterns (GET)###
+
 - **DESCRIPTION** 	Returns all patterns
 - **URL STRUCTURE** 	`...[api_url]/patterns`
 - **METHOD**		GET
@@ -80,8 +79,8 @@ API reference
 </pre>
 - **ERRORS**		
 
-- /patterns (POST)	
------------------
+###/patterns (POST)###
+
 - **DESCRIPTION** 	inserts a new pattern
 - **URL STRUCTURE** 	`...[api_url]/patterns`
 - **METHOD**		POST
@@ -89,8 +88,8 @@ API reference
 - **RETURNS**		status code 200
 - **ERRORS**		400  Error inserting pattern
 
-- /patterns (PUT)	
------------------
+###/patterns (PUT)###
+
 - **DESCRIPTION** 	updates a collection of patterns
 - **URL STRUCTURE** 	`...[api_url]/patterns`
 - **METHOD**		PUT
@@ -103,8 +102,8 @@ API reference
         "updated_patterns": 2
     }</pre>
 
-- /patterns/:name (DEL)
------------------
+###/patterns/:name (DEL)###
+
 - **DESCRIPTION** 	Deletes all patterns.
 - **URL STRUCTURE** 	`...[api_url]/patterns`
 - **METHOD**		DEL
@@ -116,8 +115,8 @@ API reference
         "deleted_patterns": 3
     }</pre>
 
-- /patterns/count (GET)	
------------------
+###/patterns/count (GET)###
+
 - **DESCRIPTION** 	returns the number of patterns
 - **URL STRUCTURE** 	`...[api_url]/patterns/count`
 - **METHOD**		GET
@@ -129,8 +128,8 @@ API reference
         "number_of_patterns": 4
     }</pre>
 
-- /patterns/:name (GET)
------------------
+###/patterns/:name (GET)###
+
 - **DESCRIPTION** 	Returns information about the pattern specified by the name parameter
 - **URL STRUCTURE** 	`...[api_url]/patterns/:name`
 - **METHOD**		GET
@@ -150,8 +149,8 @@ API reference
     }</pre>
 - **ERRORS**           404 The pattern specified by the name parameter does'nt exist in the database
 
-- /patterns/:name (PUT)
------------------
+###/patterns/:name (PUT)###
+
 - **DESCRIPTION** 	Updates the pattern specified by the name parameter
 - **URL STRUCTURE** 	`...[api_url]/patterns/:name`
 - **METHOD**		PUT
@@ -172,8 +171,8 @@ API reference
     }</pre>
 - **ERRORS**           404 The pattern specified by the name parameter does'nt exist in the database
 
-- /patterns/:name (DEL)
------------------
+###/patterns/:name (DEL)###
+
 - **DESCRIPTION** 	Deletes the pattern specified by the name parameter
 - **URL STRUCTURE** 	`...[api_url]/patterns/:name`
 - **METHOD**		DEL

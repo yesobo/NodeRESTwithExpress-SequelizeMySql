@@ -1,7 +1,7 @@
 #Node.js RESTful API with MySql/MongoHQ database with Express + Sequelize#
-_______________
+_________________
+
 ##TODO:##
-_______________
 
 - https://kanbanflow.com/board/57b0cbae7ac915c37d6cf121ea567fb8
 - (in process) Apply the daos branch purposes on master branch.
@@ -23,7 +23,7 @@ _______________
 	- Document API REST with swagger
 
 ##References:##
-_______________
+
 - Uses Sequelize (http://www.sequelizejs.com/). Good file design but uses express-resource: http://www.ziggytech.net/technology/web-development/experiences-with-node-js-porting-a-restful-service-written-in-java/
 
 - Create a REST service with express3 (instead of express-resource), testing with jQuery: http://pixelhandler.com/blog/2012/02/09/develop-a-restful-api-using-node-js-with-express-and-mongoose/
@@ -35,7 +35,7 @@ _______________
 - Testing with QUnit (the only one with good ajax testing) http://www.ajaxprojects.com/ajax/tutorialdetails.php?itemid=894
 
 ##NOTES:##
-______
+
 - Server created at http://localhost:8010
 - CoffeeScript implemented.
 - Tested with mocha + request + should.js (see TODO)
@@ -45,7 +45,7 @@ ______
 **express-resource is NOT COMPATIBLE with express3 so I used express for the routings**
 
 ##API reference##
-_________________
+
 ###/patterns (GET)###
 
 - **DESCRIPTION** 	Returns all patterns

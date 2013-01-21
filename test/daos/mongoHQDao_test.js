@@ -21,30 +21,9 @@
       "Singleton": "Singleton",
       "Prototype": "Prototype"
     };
-    test_pattern1 = {
-      "name": "Singleton",
-      "category": "Creational",
-      "intent": "Ensure a class only has one instance, and provide a global point of acg cess to it",
-      "motivation": "It's important for some classes to have exactly one instance. Making a class responsible for keepintrack of its sole instance.",
-      "applicability": "there must be exactly one instance of a class, and it must be accessible.\\nwhen the sole instance should be extensible by subclassing, and clients",
-      "structure": "Cambiar por BLOB"
-    };
-    test_pattern2 = {
-      "name": "Prototype",
-      "category": "Creational",
-      "intent": "Specify the kinds of objects to create using a prototypical instance, and create",
-      "motivation": "Use the Prototype Pattern when a client needs to create  a set of",
-      "applicability": "Use the Prototype pattern when a system should be independent of how its products",
-      "structure": "Cambiar por BLOB"
-    };
-    new_pattern = {
-      "name": "Factory Method",
-      "category": "Creational",
-      "intent": "Define an interface for creating an object, but let subclasses decide which class to instantiate. Lets a class defer instantiation to subclasses",
-      "motivation": "",
-      "applicability": "",
-      "structure": ""
-    };
+    test_pattern1 = test_pattens.singleton;
+    test_pattern2 = test_patterns.prototype_pattern;
+    new_pattern = test_patterns.factory_method;
     before(function(done) {
       daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
       console.log("deleting collection...");
@@ -62,7 +41,8 @@
       });
     });
     beforeEach(function() {
-      return daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
+      daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
+      return null;
     });
     it('Can be instatiated with paraneters', function(done) {
       daoObj.should.have.property('dbName', 'design_patterns');

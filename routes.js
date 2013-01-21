@@ -30,29 +30,30 @@
   });
 
   app.put('/api/patterns', function(req, res) {
-    var counter, pattern, patterns_length, updated_patterns, _i, _len, _ref, _results;
+    var counter, pat, patterns_length, updatePattern, updated_patterns, _i, _len, _ref, _results;
     updated_patterns = 0;
     patterns_length = req.body.patterns.length;
     counter = 0;
+    updatePattern = function(patt) {
+      return daoObj.update(patt, function(err, item) {
+        counter += 1;
+        if (err === null) {
+          updated_patterns += 1;
+        } else {
+
+        }
+        if (counter === patterns_length) {
+          return res.send({
+            "update_patterns": updated_pattern
+          });
+        }
+      });
+    };
     _ref = req.body.patterns;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      pattern = _ref[_i];
-      _results.push((function(pattern) {
-        return daoObj.update(pattern, function(err, item) {
-          counter++;
-          if (!(err != null)) {
-            updated_patterns += 1;
-          } else {
-
-          }
-          if (counter === patterns_length) {
-            return res.send({
-              "updated_patterns": updated_patterns
-            });
-          }
-        });
-      })(pattern));
+      pat = _ref[_i];
+      _results.push(updatePattern(pat));
     }
     return _results;
   });
@@ -69,11 +70,11 @@
     var pName;
     pName = req.params.name;
     return daoObj.findByName(pName, function(err, item) {
-      if (err != null) {
+      if (err !== null) {
         console.log("ERROR!");
         return res.send(err, item);
       } else {
-        if (item != null) {
+        if (item !== null) {
           return res.send(item);
         } else {
           return res.send(404);
@@ -98,7 +99,7 @@
       structure: req.body.structure
     };
     return daoObj.update(updated_pattern, function(err) {
-      if (err != null) {
+      if (err !== null) {
         return res.send(404);
       } else {
         return daoObj.findByName(pName, function(err, item) {
@@ -112,7 +113,7 @@
     var pName;
     pName = req.params.name;
     return daoObj["delete"](pName, function(err) {
-      if (err != null) {
+      if (err !== null) {
         return res.send(500);
       } else {
         return res.send(200);
@@ -123,7 +124,7 @@
   app.del('/api/patterns', function(req, res) {
     return daoObj.count(function(err, count) {
       return daoObj.deleteAll(function(err) {
-        if (err != null) {
+        if (err !== null) {
           return res.send(err);
         } else {
           return res.send(200, {

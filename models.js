@@ -50,11 +50,6 @@
         mapAttributes: db.map
       }
     };
-    /*
-    	@type {Object}
-    	All models we have defined over Sequelize, plus the db instance itself
-    */
-
     self = {
       Pattern: db.define('patterns', Pattern, db_options)
     };

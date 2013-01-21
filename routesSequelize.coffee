@@ -19,9 +19,9 @@ app.get '/api/patterns/count', (req, res) ->
 
 # GET pattern by id
 app.get '/api/patterns/:id', (req, res) ->
-	intId = parseInt(req.params.id)
+	intId = parseInt req.params.id, 10
 	Pattern_model.find(intId).success (pattern) ->
-		if pattern? 
+		if pattern != null
 			res.send(pattern) 
 		else 
 			res.send 404 
@@ -41,7 +41,7 @@ app.post '/api/patterns', (req, res) ->
 	
 # PUT update pattern by id
 app.put '/api/patterns/:id', (req, res)->
-	intId = parseInt req.params.id
+	intId = parseInt req.params.id, 10
 	Pattern_model.find(intId).success (pattern) ->
 		pattern.name 					= req.body.name
 		pattern.category	 		= req.body.category
@@ -55,9 +55,9 @@ app.put '/api/patterns/:id', (req, res)->
 
 # DELETE delete product by id
 app.del '/api/patterns/:id', (req, res)->
-	intId = parseInt req.params.id
+	intId = parseInt req.params.id, 10
 	Pattern_model.find(intId).success (pattern)->
-			if pattern?
+			if pattern != null
 				pattern.destroy().success ->
 					res.send 'pattern ' + pattern.id + ' deleted'
 			else 

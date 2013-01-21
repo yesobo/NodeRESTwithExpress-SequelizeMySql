@@ -87,7 +87,7 @@ describe('Tests for patterns API, ', function() {
 				}
 				else {
 					res.statusCode.should.be.equal(200);
-					res.should.be.json;
+					var dummy = res.should.be.json;
 					should.exist(body);
 					var patterns = JSON.parse(body);
 					patterns.should.be.an.instanceOf(Array);
@@ -106,7 +106,7 @@ describe('Tests for patterns API, ', function() {
 				}
 				else {
 					res.statusCode.should.be.equal(200);
-					res.should.be.http;
+					var dummy = res.should.be.http;
 					should.exist(body);
 					var resp = JSON.parse(body);
 					resp.should.have.property("number_of_patterns", 2);
@@ -228,7 +228,7 @@ describe('Tests for patterns API, ', function() {
 
 			var put_callback = function(error, res, body) {
 				res.statusCode.should.be.equal(200);
-				res.should.be.json;
+				var dummy = res.should.be.json;
 				should.exist(body);
 				var responseCol = JSON.parse(body);
 				should.strictEqual(responseCol.updated_patterns, 2);

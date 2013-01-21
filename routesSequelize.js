@@ -27,9 +27,9 @@
 
   app.get('/api/patterns/:id', function(req, res) {
     var intId;
-    intId = parseInt(req.params.id);
+    intId = parseInt(req.params.id, 10);
     return Pattern_model.find(intId).success(function(pattern) {
-      if (pattern != null) {
+      if (pattern !== null) {
         return res.send(pattern);
       } else {
         return res.send(404);
@@ -55,7 +55,7 @@
 
   app.put('/api/patterns/:id', function(req, res) {
     var intId;
-    intId = parseInt(req.params.id);
+    intId = parseInt(req.params.id, 10);
     return Pattern_model.find(intId).success(function(pattern) {
       pattern.name = req.body.name;
       pattern.category = req.body.category;
@@ -71,9 +71,9 @@
 
   app.del('/api/patterns/:id', function(req, res) {
     var intId;
-    intId = parseInt(req.params.id);
+    intId = parseInt(req.params.id, 10);
     return Pattern_model.find(intId).success(function(pattern) {
-      if (pattern != null) {
+      if (pattern !== null) {
         return pattern.destroy().success(function() {
           return res.send('pattern ' + pattern.id + ' deleted');
         });

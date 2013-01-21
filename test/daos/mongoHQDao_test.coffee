@@ -15,8 +15,7 @@ describe 'Tests for MongoDBConnector', ->
 	}
 
 	test_pattern1 = test_pattens.singleton
-
-  	test_pattern2 = test_patterns.prototype_pattern
+	test_pattern2 = test_patterns.prototype_pattern
 
 	new_pattern = test_patterns.factory_method
 
@@ -35,6 +34,7 @@ describe 'Tests for MongoDBConnector', ->
 
 	beforeEach ->
 		daoObj = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 10001
+		null
 
 	it 'Can be instatiated with paraneters', (done) ->
 		daoObj.should.have.property 'dbName', 'design_patterns'

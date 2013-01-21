@@ -24,16 +24,17 @@ app.put '/api/patterns', (req, res) ->
 	updated_patterns = 0
 	patterns_length = req.body.patterns.length
 	counter = 0
-	for pattern in req.body.patterns
-		do (pattern) ->
-			daoObj.update pattern, (err, item) ->
-				counter++
-				if !err?
-					updated_patterns += 1
-				else
-				if counter == patterns_length
-					res.send {"updated_patterns": updated_patterns}
 
+	updatePattern = (patt) ->
+		daoObj.update patt, (err, item) ->
+			counter += 1
+			if err == null
+				updated_patterns += 1
+			else
+			if counter == patterns_length
+				res.send {"update_patterns": updated_pattern}
+
+	updatePattern pat for pat in req.body.patterns				
 
 # GET the number of patterns
 app.get '/api/patterns/count', (req, res) ->
@@ -44,11 +45,11 @@ app.get '/api/patterns/count', (req, res) ->
 app.get '/api/patterns/:name', (req, res) ->
 	pName = req.params.name
 	daoObj.findByName pName, (err, item) ->
-		if err?
+		if err != null
 			console.log "ERROR!"
 			res.send err, item
 		else
-			if item?
+			if item != null
 				res.send item
 			else
 				res.send 404
@@ -68,7 +69,7 @@ app.put '/api/patterns/:name', (req, res) ->
 		applicability: req.body.applicability
 		structure: req.body.structure
 	daoObj.update updated_pattern, (err) ->
-		if err? 
+		if err != null
 			res.send 404
 		else
 			daoObj.findByName pName, (err, item) ->
@@ -78,7 +79,7 @@ app.put '/api/patterns/:name', (req, res) ->
 app.del '/api/patterns/:name', (req, res) ->
 	pName = req.params.name
 	daoObj.delete pName, (err) ->
-		if err?
+		if err != null
 			res.send 500
 		else
 			res.send 200
@@ -87,7 +88,7 @@ app.del '/api/patterns/:name', (req, res) ->
 app.del '/api/patterns', (req, res) ->
 	daoObj.count (err, count) ->
 		daoObj.deleteAll (err) ->
-			if err?
+			if err != null
 				res.send err
 			else
 				res.send 200, "deleted_patterns": count

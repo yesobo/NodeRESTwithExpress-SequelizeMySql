@@ -2,11 +2,11 @@
 mongodb = require 'mongodb'
 util = require 'util'
 
-###
-Use:
-	connector = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 100001
-	connector.findAll (err, items) -> res.send items
-###
+
+#Use:
+#	connector = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 100001
+#	connector.findAll (err, items) -> res.send items
+
 module.exports = class MongoDBConnector
 	# dbName = 'design_patterns'
 	# host = 'alex.mongohq.com'
@@ -61,14 +61,14 @@ module.exports = class MongoDBConnector
 				callback err, null
 			else
 				collection.findOne name:name, (err, item) ->
-					if !item?
+					if item == null
 						err = 404
 						item = {"message": "document not found"}	
 					callback err, item
 
 	#call: callback parameters are (err, doc)
 	insert: (pattern, callback) ->
-		if !pattern.name? or pattern.name == ""
+		if pattern.name == null or pattern.name == ""
 			err = 400
 			item = {'message': 'You must insert an id value'}
 			callback err, item

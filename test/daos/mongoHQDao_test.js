@@ -21,7 +21,7 @@
       "Singleton": "Singleton",
       "Prototype": "Prototype"
     };
-    test_pattern1 = test_pattens.singleton;
+    test_pattern1 = test_patterns.singleton;
     test_pattern2 = test_patterns.prototype_pattern;
     new_pattern = test_patterns.factory_method;
     before(function(done) {

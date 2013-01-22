@@ -10,15 +10,6 @@
   routes = "./routes.js";
 
   /*
-  app
-  @type {Express}
-  The Singleton of Express app instance
-  */
-
-
-  GLOBAL.app = app;
-
-  /*
   Retrieve Commanbd Line Arguments
   [0] process = String 'node'
   [1] app : void
@@ -79,7 +70,7 @@
     return res.send('Ecomm API is running');
   });
 
-  routes = require(routes);
+  routes = require(routes(app));
 
   app.listen(port);
 

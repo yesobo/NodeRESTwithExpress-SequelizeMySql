@@ -57,8 +57,9 @@
         });
       });
     });
-    beforeEach(function() {
-      return daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
+    beforeEach(function(done) {
+      daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
+      return done();
     });
     it.only('Can be instatiated with paraneters', function(done) {
       daoObj.should.have.property('dbName', 'design_patterns');

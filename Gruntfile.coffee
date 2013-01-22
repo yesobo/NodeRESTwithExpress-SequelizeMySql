@@ -14,11 +14,20 @@ module.exports = (grunt) ->
                 eqnull: true
                 browser: true
                 predef:
-                    ['require']
+                    ['require',
+                     'module',
+                     'process',
+                     '__dirname',
+                     'console',
+                     'describe',
+                     'before',
+                     'beforeEach',
+                     'it']
 
-                
             myproject:
-                src: ['app.js']
+                src: ['*.js',
+                      'daos/*.js',
+                      'test/**/*.js']
     
     grunt.loadNpmTasks 'grunt-contrib-jshint'
 

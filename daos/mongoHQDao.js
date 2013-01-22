@@ -6,13 +6,6 @@
 
   util = require('util');
 
-  /*
-  Use:
-  	connector = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 100001
-  	connector.findAll (err, items) -> res.send items
-  */
-
-
   module.exports = MongoDBConnector = (function() {
     var initTransaction;
 
@@ -86,7 +79,7 @@
           return collection.findOne({
             name: name
           }, function(err, item) {
-            if (!(item != null)) {
+            if (item === null) {
               err = 404;
               item = {
                 "message": "document not found"
@@ -100,7 +93,7 @@
 
     MongoDBConnector.prototype.insert = function(pattern, callback) {
       var err, item;
-      if (!(pattern.name != null) || pattern.name === "") {
+      if (pattern.name === null || pattern.name === "") {
         err = 400;
         item = {
           'message': 'You must insert an id value'

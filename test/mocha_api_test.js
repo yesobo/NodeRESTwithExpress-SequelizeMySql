@@ -1,6 +1,6 @@
 var modules_url = '../node_modules';
 var request = require(modules_url + '/request'),
-	should = require(modules_url + '/should');
+	should = require(modules_url + '/should'),
 	util = require('util'),
 	MongoDBConnector = require('../daos/mongoHQDao.js'),
 	test_patterns = require('./test_patterns.js');
@@ -21,7 +21,7 @@ describe('Tests for patterns API, ', function() {
 
 	/* Makes a GET request to /patterns/:name where name is the first parameter's name,
 		and checks that the returned object is the same as the first parameter */
-	var testIfExists = function(test_pattern, cb) {
+	var testIfExists = function(test_pattern, cb, done) {
 		request.get(url + '/patterns/' + test_pattern.name, function (err, res, body) {
 			if(err) {
 				done(err);
@@ -186,7 +186,7 @@ describe('Tests for patterns API, ', function() {
 					request(post_options, function() {
 						done();
 					});
-				});
+				}, done);
 			};
 			request(post_options, put_callback);
 		});
@@ -240,8 +240,8 @@ describe('Tests for patterns API, ', function() {
 			testIfExists(test_pattern1, function() {
 				testIfExists(test_pattern4_modif, function() {
 					done();
-				});
-			});
+				}, done);
+			}, done);
 		});
 		it('only updates the patterns that match by name.', function(done) {
 			testIfNotExists(new_pattern, function() {

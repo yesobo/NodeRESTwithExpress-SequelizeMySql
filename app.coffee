@@ -7,13 +7,6 @@ app = express()
 routes = "./routes.js"
 
 ###
-app
-@type {Express}
-The Singleton of Express app instance
-###
-GLOBAL.app = app
-
-###
 Retrieve Commanbd Line Arguments
 [0] process = String 'node'
 [1] app : void
@@ -70,7 +63,7 @@ app.get '/api', (req, res)=>
 	res.send 'Ecomm API is running'
 
 # Routes
-routes = require routes
+routes = require routes(app)
 # HTTP Server
 app.listen port
 console.log "Express Server listening on port #{port} in #{app.settings.env} mode."

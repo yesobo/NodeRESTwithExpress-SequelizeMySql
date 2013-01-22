@@ -49,8 +49,9 @@ describe 'Tests for MongoDBConnector', ->
 					console.log "DB restarted"
 					done()
 
-	beforeEach ->
+	beforeEach (done) ->
 		daoObj = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 10001
+		done()
 
 	it.only 'Can be instatiated with paraneters', (done) ->
 		daoObj.should.have.property 'dbName', 'design_patterns'

@@ -34,6 +34,12 @@ _________________
 
 - Testing with QUnit (the only one with good ajax testing) http://www.ajaxprojects.com/ajax/tutorialdetails.php?itemid=894
 
+- Building with [grunt.js] http://gruntjs.com/ version: 0.4.0a
+    - tasks added:
+        - [jshint](https://github.com/gruntjs/grunt-contrib-jshint)
+        - [simplemocha](https://github.com/yaymukund/grunt-simple-mocha)
+        - [coffee](https://github.com/gruntjs/grunt-contrib-coffee)
+
 ##NOTES:##
 
 - Server created at http://localhost:8010

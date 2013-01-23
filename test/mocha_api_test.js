@@ -64,15 +64,9 @@ describe('Tests for patterns API, ', function() {
 	// Restart the DB with 2 test objects
 	before(function(done) {
 		var daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
-		console.log("deleting collection...");
 		daoObj.deleteAll( function(err) {
-			console.log("collection deleted.");
-			console.log("inserting pattern1");
 			daoObj.insert(test_pattern1, function(err, docs) {
-				console.log("pattern1 inserted");
-				console.log("inserting pattern2");
 				daoObj.insert(test_pattern2, function(err, docs) {
-					console.log("DB restarted");
 					done();
 				});
 			});

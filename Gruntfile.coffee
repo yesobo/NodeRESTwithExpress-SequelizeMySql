@@ -39,9 +39,20 @@ module.exports = (grunt) ->
 
             all:
                 src: 'test/mocha_api_test.js'
-    
+
+        coffee:
+            compile:
+                files:
+                    grunt.file.expandMapping(['*.coffee', 'daos/*.coffee'], '', rename: (destBase, destPath) -> destBase + destPath.replace('.coffee', '.js'))
+
+        watch:
+            coffee:
+                files: ['**/**/*.coffee'],
+                tasks: 'coffee'
+
     grunt.loadNpmTasks 'grunt-contrib-jshint'
     grunt.loadNpmTasks 'grunt-simple-mocha'
+    grunt.loadNpmTasks 'grunt-contrib-coffee'
 
-    grunt.registerTask 'default', ['jshint:myproject', 'simplemocha']
+    grunt.registerTask 'default', ['jshint:myproject', 'simplemocha', 'coffee']
 

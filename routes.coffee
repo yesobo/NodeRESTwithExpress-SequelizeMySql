@@ -27,16 +27,20 @@ module.exports = (app) ->
 		patterns_length = req.body.patterns.length
 		counter = 0
 
-		updatePattern = (patt) ->
+		updatePattern = (patt, cb) ->
 			daoObj.update patt, (err, item) ->
 				counter += 1
 				if err == null
 					updated_patterns += 1
 				else
+				console.log "updating #{counter} de #{patterns_length}"
 				if counter == patterns_length
-					res.send {"update_patterns": updated_patterns}
+					cb()
 
-		updatePattern pat for pat in req.body.patterns				
+		updateCallback = () ->
+			res.send {"updated_patterns": updated_patterns}
+		
+		updatePattern pat, updateCallback for pat in req.body.patterns				
 
 	# GET the number of patterns
 	app.get '/api/patterns/count', (req, res) ->

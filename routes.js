@@ -29,11 +29,11 @@
       });
     });
     app.put('/api/patterns', function(req, res) {
-      var counter, pat, patterns_length, updatePattern, updated_patterns, _i, _len, _ref, _results;
+      var counter, pat, patterns_length, updateCallback, updatePattern, updated_patterns, _i, _len, _ref, _results;
       updated_patterns = 0;
       patterns_length = req.body.patterns.length;
       counter = 0;
-      updatePattern = function(patt) {
+      updatePattern = function(patt, cb) {
         return daoObj.update(patt, function(err, item) {
           counter += 1;
           if (err === null) {
@@ -41,18 +41,23 @@
           } else {
 
           }
+          console.log("updating " + counter + " de " + patterns_length);
           if (counter === patterns_length) {
-            return res.send({
-              "update_patterns": updated_patterns
-            });
+            return cb();
           }
+        });
+      };
+      updateCallback = function() {
+        console.log("sending response with " + updated_patterns + " updated patterns.");
+        return res.send({
+          "updated_patterns": updated_patterns
         });
       };
       _ref = req.body.patterns;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         pat = _ref[_i];
-        _results.push(updatePattern(pat));
+        _results.push(updatePattern(pat, updateCallback));
       }
       return _results;
     });

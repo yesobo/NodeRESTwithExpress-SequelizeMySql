@@ -28,8 +28,20 @@ module.exports = (grunt) ->
                 src: ['*.js',
                       'daos/*.js',
                       'test/**/*.js']
+        simplemocha:
+            options:
+                #globals: ['should']
+                timeout: 10000
+                #ignoreLeaks: false
+                #grep: '*-test'
+                ui: 'bdd'
+                #reporters: 'tap'
+
+            all:
+                src: 'test/mocha_api_test.js'
     
     grunt.loadNpmTasks 'grunt-contrib-jshint'
+    grunt.loadNpmTasks 'grunt-simple-mocha'
 
-    grunt.registerTask 'default', ['jshint:myproject']
+    grunt.registerTask 'default', ['jshint:myproject', 'simplemocha']
 

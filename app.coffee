@@ -4,7 +4,7 @@ express = require 'express'
 app = express()
 # Set dao init path
 #database = "./database.js"
-routes = "./routes.js"
+routesPath = "./routes.js"
 
 ###
 Retrieve Commanbd Line Arguments
@@ -63,7 +63,7 @@ app.get '/api', (req, res)=>
 	res.send 'Ecomm API is running'
 
 # Routes
-routes = require routes(app)
+routes = require(routesPath)(app)
 # HTTP Server
 app.listen port
 console.log "Express Server listening on port #{port} in #{app.settings.env} mode."

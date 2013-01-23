@@ -203,7 +203,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	describe('Bulk update patterns with PUT a "patterns" JSON collection to /patterns ', function() {
+	describe('Bulk update patterns with PUT a "patterns" JSON collection to /patterns', function() {
 		var col;
 		/* creates the collection */
 		before(function() {

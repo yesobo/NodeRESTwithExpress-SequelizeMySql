@@ -1,7 +1,9 @@
 (function() {
-  var MongoDBConnector, mongodb, util;
+  var MongoDBConnector, mongodb, util, winston;
 
   mongodb = require('mongodb');
+
+  winston = require('winston');
 
   util = require('util');
 
@@ -22,20 +24,20 @@
     initTransaction = function(callback) {
       var privateDBName, privateDb;
       if (this.db._state === 'connected') {
-        console.log("Conection opened");
+        winston.info("Conection opened");
         return this.db.collection(this.dbName, callback);
       } else {
-        console.log("opening connection...");
+        winston.info("opening connection...");
         privateDb = this.db;
         privateDBName = this.dbName;
         return this.db.open(function(err, p_client) {
           if (err != null) {
-            return console.log("ERROR opening connection: " + err);
+            return winston.error("ERROR opening connection: " + err);
           } else {
-            console.log("connection opened");
-            console.log("authenticating...");
+            winston.info("connection opened");
+            winston.info("authenticating...");
             return privateDb.authenticate('admin', '1234', function(err) {
-              console.log("autenticated!");
+              winston.info("autenticated!");
               return privateDb.collection(privateDBName, callback);
             });
           }
@@ -46,7 +48,7 @@
     MongoDBConnector.prototype.findAll = function(callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
-          console.log("ERROR!");
+          winston.error("ERROR!");
           return callback(err, null);
         } else {
           return collection.find().toArray(function(err, items) {
@@ -59,7 +61,7 @@
     MongoDBConnector.prototype.count = function(callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
-          console.log("ERROR");
+          winston.error("ERROR");
           return callback(err, null);
         } else {
           return collection.count(function(err, count) {
@@ -72,7 +74,7 @@
     MongoDBConnector.prototype.findByName = function(name, callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
-          console.log("ERROR!");
+          winston.error("ERROR!");
           return callback(err, null);
         } else {
           return collection.findOne({
@@ -101,7 +103,7 @@
       } else {
         return initTransaction.call(this, function(err, collection) {
           if (err != null) {
-            console.log("ERROR!");
+            winston.error("ERROR!");
             return callback(err, null);
           } else {
             return collection.findOne({
@@ -134,7 +136,7 @@
       new_struc = pattern.structure;
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
-          console.log("ERROR!");
+          winston.error("ERROR!");
           return callback(err, null);
         } else {
           return collection.findOne({
@@ -169,7 +171,7 @@
     MongoDBConnector.prototype["delete"] = function(pName, callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
-          console.log("ERROR!");
+          winston.error("ERROR!");
           return callback(err, "DB error");
         } else {
           return collection.findOne({
@@ -198,7 +200,7 @@
     MongoDBConnector.prototype.deleteAll = function(callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
-          console.log("ERROR!");
+          winston.error("ERROR!");
           return callback(err);
         } else {
           return collection.remove({}, function(err) {

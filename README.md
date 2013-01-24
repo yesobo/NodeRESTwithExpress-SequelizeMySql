@@ -40,6 +40,8 @@ _________________
         - [simplemocha](https://github.com/yaymukund/grunt-simple-mocha)
         - [coffee](https://github.com/gruntjs/grunt-contrib-coffee)
 
+- Logging with [winston](https://github.com/flatiron/winston) default logger
+
 ##NOTES:##
 
 - Server created at http://localhost:8010

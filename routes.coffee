@@ -1,4 +1,5 @@
 DBConnector = require "./daos/mongoHQDao.js"
+winston = require 'winston'
 util = require 'util'
 
 module.exports = (app) ->
@@ -33,7 +34,6 @@ module.exports = (app) ->
 				if err == null
 					updated_patterns += 1
 				else
-				console.log "updating #{counter} de #{patterns_length}"
 				if counter == patterns_length
 					cb()
 
@@ -52,7 +52,7 @@ module.exports = (app) ->
 		pName = req.params.name
 		daoObj.findByName pName, (err, item) ->
 			if err != null
-				console.log "ERROR!"
+				winston.error "ERROR!"
 				res.send err, item
 			else
 				if item != null

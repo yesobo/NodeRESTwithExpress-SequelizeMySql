@@ -48,7 +48,7 @@
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-simple-mocha');
     grunt.loadNpmTasks('grunt-contrib-coffee');
-    return grunt.registerTask('default', ['jshint:myproject', 'simplemocha', 'coffee']);
+    return grunt.registerTask('default', ['jshint:myproject', 'coffee', 'simplemocha']);
   };
 
 }).call(this);

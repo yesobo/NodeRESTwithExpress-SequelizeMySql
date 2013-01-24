@@ -1,7 +1,9 @@
 (function() {
-  var DBConnector, util;
+  var DBConnector, util, winston;
 
   DBConnector = require("./daos/mongoHQDao.js");
+
+  winston = require('winston');
 
   util = require('util');
 
@@ -40,7 +42,6 @@
           } else {
 
           }
-          console.log("updating " + counter + " de " + patterns_length);
           if (counter === patterns_length) {
             return cb();
           }
@@ -71,7 +72,7 @@
       pName = req.params.name;
       return daoObj.findByName(pName, function(err, item) {
         if (err !== null) {
-          console.log("ERROR!");
+          winston.error("ERROR!");
           return res.send(err, item);
         } else {
           if (item !== null) {

@@ -1,5 +1,6 @@
 # Module dependencies
 express = require 'express'
+winston = require 'winston'
 # Create Application Server
 app = express()
 # Set dao init path
@@ -66,4 +67,4 @@ app.get '/api', (req, res)=>
 routes = require(routesPath)(app)
 # HTTP Server
 app.listen port
-console.log "Express Server listening on port #{port} in #{app.settings.env} mode."
+winston.info "Express Server listening on port #{port} in #{app.settings.env} mode."

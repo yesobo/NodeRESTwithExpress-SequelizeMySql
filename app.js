@@ -1,8 +1,10 @@
 (function() {
-  var allowCrossDomain, app, args, database_options, express, port, routes, routesPath,
+  var allowCrossDomain, app, args, database_options, express, port, routes, routesPath, winston,
     _this = this;
 
   express = require('express');
+
+  winston = require('winston');
 
   app = express();
 
@@ -73,6 +75,6 @@
 
   app.listen(port);
 
-  console.log("Express Server listening on port " + port + " in " + app.settings.env + " mode.");
+  winston.info("Express Server listening on port " + port + " in " + app.settings.env + " mode.");
 
 }).call(this);

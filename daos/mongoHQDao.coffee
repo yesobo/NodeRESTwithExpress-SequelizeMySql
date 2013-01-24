@@ -1,5 +1,6 @@
 #npm install mongodb
 mongodb = require 'mongodb'
+winston = require 'winston'
 util = require 'util'
 
 
@@ -17,27 +18,27 @@ module.exports = class MongoDBConnector
 	#call: callback parameters are (err, collection)
 	initTransaction = (callback) ->
 		if @db._state == 'connected'
-			console.log "Conection opened"
+			winston.info "Conection opened"
 			@db.collection @dbName, callback
 		else
-			console.log "opening connection..."
+			winston.info "opening connection..."
 			privateDb = @db
 			privateDBName = @dbName
 			@db.open (err, p_client) ->
 				if err?
-					console.log "ERROR opening connection: #{err}"
+					winston.error "ERROR opening connection: #{err}"
 				else	
-					console.log "connection opened"
-					console.log "authenticating..."
+					winston.info "connection opened"
+					winston.info "authenticating..."
 					privateDb.authenticate 'admin', '1234', (err) ->
-						console.log "autenticated!"
+						winston.info "autenticated!"
 						privateDb.collection privateDBName, callback
 
 	#call: callback parameters are (err, items)
 	findAll: (callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
-				console.log "ERROR!"
+				winston.error "ERROR!"
 				callback err, null
 			else
 				collection.find().toArray (err, items) ->
@@ -47,7 +48,7 @@ module.exports = class MongoDBConnector
 	count: (callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
-				console.log "ERROR"
+				winston.error "ERROR"
 				callback err, null
 			else
 				collection.count (err, count) ->
@@ -57,7 +58,7 @@ module.exports = class MongoDBConnector
 	findByName: (name, callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
-				console.log "ERROR!"
+				winston.error "ERROR!"
 				callback err, null
 			else
 				collection.findOne name:name, (err, item) ->
@@ -75,7 +76,7 @@ module.exports = class MongoDBConnector
 		else
 			initTransaction.call this, (err, collection) ->
 				if err?
-					console.log "ERROR!"
+					winston.error "ERROR!"
 					callback err, null
 				else
 					collection.findOne name:pattern.name, (err, item) ->
@@ -98,7 +99,7 @@ module.exports = class MongoDBConnector
 		new_struc = pattern.structure
 		initTransaction.call this, (err, collection) ->
 			if err?
-				console.log "ERROR!"
+				winston.error "ERROR!"
 				callback err, null
 			else
 				collection.findOne name:name, (err, item) ->
@@ -121,7 +122,7 @@ module.exports = class MongoDBConnector
 	delete: (pName, callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
-				console.log "ERROR!"
+				winston.error "ERROR!"
 				callback err, "DB error"
 			else
 				collection.findOne name:pName, (err, item) ->
@@ -137,7 +138,7 @@ module.exports = class MongoDBConnector
 	deleteAll: (callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
-				console.log "ERROR!"
+				winston.error "ERROR!"
 				callback err
 			else
 				collection.remove {}, (err) ->

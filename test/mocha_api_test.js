@@ -92,6 +92,25 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	var LIMIT = 1;
+	describe('Read patterns with GET /patterns?limit=' + LIMIT, function() {
+		it('should return 1 element if limit = ' + LIMIT + ' is specefied at querystring', function(done){
+			request.get(url + '/patterns?limit=' + LIMIT, function (err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					res.statusCode.should.be.equal(200);
+					var dummy = res.should.be.json;
+					should.exist(body);
+					var patterns = JSON.parse(body);
+					patterns.should.be.an.instanceOf(Array);
+					patterns.should.have.length(LIMIT);
+					done();
+				}
+			});
+		});
+	});
+
 	describe('Count patterns with GET /patterns/count ', function(){
 		it('should return statusCode 200 and a JSON object {"number_of_patterns": 2}.', function(done){
 			request.get(url + '/patterns/count', function (err, res, body) {

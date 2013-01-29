@@ -45,9 +45,14 @@ describe 'Tests for MongoDBConnector', ->
 		daoObj.db.should.be.an.instanceof mongodb.Db
 		done()
 	it 'findAll returns the collection', (done) ->
-		daoObj.findAll (err, items) ->
+		daoObj.findAll 0, (err, items) ->
 			items.should.be.an.instanceOf Array
 			items.should.have.length 2
+			done()
+	it 'findAll(1, callback) returns one element', (done) ->
+		daoObj.findAll 1, (err, items) ->
+			items.should.be.an.instanceOf Array
+			items.should.have.length 1
 			done()
 	it "count returns my collection's number", (done) ->
 		daoObj.count (err, count) ->
@@ -103,7 +108,7 @@ describe 'Tests for MongoDBConnector', ->
 		daoObj.delete new_pattern.name, (err, item) ->
 			daoObj.count (err, count) ->
 				should.strictEqual count, 2
-				daoObj.findAll (err, items) ->
+				daoObj.findAll 0, (err, items) ->
 					items.should.be.an.instanceOf Array
 					items.should.have.length 2
 					in_db_patterns_names.should.have.property items[0].name

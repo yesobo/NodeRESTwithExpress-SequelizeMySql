@@ -11,7 +11,10 @@
     var daoObj;
     daoObj = new DBConnector('design_patterns', 'alex.mongohq.com', 10001);
     app.get('/api/patterns', function(req, res) {
-      return daoObj.findAll(function(err, items) {
+      var limit;
+      limit = req.query.limit;
+      console.log('calling GET patterns with limit = ' + limit);
+      return daoObj.findAll(limit, function(err, items) {
         return res.send(items);
       });
     });

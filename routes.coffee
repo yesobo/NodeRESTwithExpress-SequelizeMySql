@@ -7,7 +7,9 @@ module.exports = (app) ->
 
 	# GET all patterns
 	app.get '/api/patterns', (req, res) ->
-		daoObj.findAll (err, items) ->			
+		limit = req.query.limit
+		console.log 'calling GET patterns with limit = ' + limit
+		daoObj.findAll limit, (err, items) ->			
 			res.send items
 
 	# POST a new pattern

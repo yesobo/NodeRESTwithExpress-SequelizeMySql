@@ -35,13 +35,13 @@ module.exports = class MongoDBConnector
 						privateDb.collection privateDBName, callback
 
 	#call: callback parameters are (err, items)
-	findAll: (callback) ->
+	findAll: (lim, callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
 				winston.error "ERROR!"
 				callback err, null
 			else
-				collection.find().toArray (err, items) ->
+				collection.find({}, limit:lim).toArray (err, items) ->
 					callback err, items
 
 	#call: callback parameters are (err, count)

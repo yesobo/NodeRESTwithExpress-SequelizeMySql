@@ -38,7 +38,9 @@ module.exports = (grunt) ->
                 #reporters: 'tap'
 
             all:
-                src: 'test/mocha_api_test.js'
+                src: [
+                    'test/mocha_api_test.js', 
+                    'test/daos/mongoHQDao_test.js']
 
         coffee:
             compile:

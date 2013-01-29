@@ -45,13 +45,15 @@
       }
     };
 
-    MongoDBConnector.prototype.findAll = function(callback) {
+    MongoDBConnector.prototype.findAll = function(lim, callback) {
       return initTransaction.call(this, function(err, collection) {
         if (err != null) {
           winston.error("ERROR!");
           return callback(err, null);
         } else {
-          return collection.find().toArray(function(err, items) {
+          return collection.find({}, {
+            limit: lim
+          }).toArray(function(err, items) {
             return callback(err, items);
           });
         }

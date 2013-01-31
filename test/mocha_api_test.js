@@ -105,11 +105,52 @@ describe('Tests for patterns API, ', function() {
 					var patterns = JSON.parse(body);
 					patterns.should.be.an.instanceOf(Array);
 					patterns.should.have.length(LIMIT);
+					patterns[0].should.have.property('name', test_pattern1.name);
 					done();
 				}
 			});
 		});
 	});
+
+	var OFFSET = 1;
+	describe('Read patterns with GET /patterns?offset=' + OFFSET, function() {
+		it('should return the second test element', function(done){
+			request.get(url + '/patterns?offset=' + OFFSET, function (err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					res.statusCode.should.be.equal(200);
+					var dummy = res.should.be.json;
+					should.exist(body);
+					var patterns = JSON.parse(body);
+					patterns.should.be.an.instanceOf(Array);
+					patterns.should.have.length(LIMIT);
+					patterns[0].should.have.property('name', test_pattern2.name);
+					done();
+				}
+			});
+		});
+	});
+
+	describe('Read patterns with GET /patterns?limit=' + LIMIT + '&offset=' + OFFSET, function() {
+		it('should return the second test element', function(done){
+			request.get(url + '/patterns?limit=' + LIMIT + '&offset=' + OFFSET, function (err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					res.statusCode.should.be.equal(200);
+					var dummy = res.should.be.json;
+					should.exist(body);
+					var patterns = JSON.parse(body);
+					patterns.should.be.an.instanceOf(Array);
+					patterns.should.have.length(LIMIT);
+					patterns[0].should.have.property('name', test_pattern2.name);
+					done();
+				}
+			});
+		});
+	});
+
 
 	describe('Count patterns with GET /patterns/count ', function(){
 		it('should return statusCode 200 and a JSON object {"number_of_patterns": 2}.', function(done){

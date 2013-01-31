@@ -49,10 +49,26 @@ describe 'Tests for MongoDBConnector', ->
 			items.should.be.an.instanceOf Array
 			items.should.have.length 2
 			done()
-	it 'findAll(1, callback) returns one element', (done) ->
-		daoObj.findAll 1, (err, items) ->
+	it 'findAll({limit:1}, callback) returns our first element', (done) ->
+		daoObj.findAll limit:1, (err, items) ->
 			items.should.be.an.instanceOf Array
 			items.should.have.length 1
+			items[0].should.have.property 'name', test_pattern1.name
+			done()
+	it 'findAll({offset:1}, callback) returns the second element', (done) ->
+		daoObj.findAll offset:1, (err, items) ->
+			items.should.be.an.instanceOf Array
+			items.should.have.length 1
+			items[0].should.have.property 'name', test_pattern2.name
+			done()
+	find_options =
+		limit: 1
+		offset: 1
+	it 'findAll({limit:1, offset:1}, callback) returns the second element', (done) ->
+		daoObj.findAll find_options, (err, items) ->
+			items.should.be.an.instanceof Array
+			items.should.have.length 1
+			items[0].should.have.property 'name', test_pattern2.name
 			done()
 	it "count returns my collection's number", (done) ->
 		daoObj.count (err, count) ->

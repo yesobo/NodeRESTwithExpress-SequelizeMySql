@@ -11,10 +11,15 @@
     var daoObj;
     daoObj = new DBConnector('design_patterns', 'alex.mongohq.com', 10001);
     app.get('/api/patterns', function(req, res) {
-      var limit;
-      limit = req.query.limit;
-      console.log('calling GET patterns with limit = ' + limit);
-      return daoObj.findAll(limit, function(err, items) {
+      var options;
+      options = {};
+      if (req.query.limit != null) {
+        options.limit = req.query.limit;
+      }
+      if (req.query.offset != null) {
+        options.offset = req.query.offset;
+      }
+      return daoObj.findAll(options, function(err, items) {
         return res.send(items);
       });
     });

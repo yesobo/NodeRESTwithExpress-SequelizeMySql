@@ -60,10 +60,23 @@
         return done();
       });
     });
-    it('findAll(1, callback) returns one element', function(done) {
-      return daoObj.findAll(1, function(err, items) {
+    it('findAll({limit:1}, callback) returns our first element', function(done) {
+      return daoObj.findAll({
+        limit: 1
+      }, function(err, items) {
         items.should.be.an.instanceOf(Array);
         items.should.have.length(1);
+        items[0].should.have.property('name', test_pattern1.name);
+        return done();
+      });
+    });
+    it('findAll({offset:1}, callback) returns the second element', function(done) {
+      return daoObj.findAll({
+        offset: 1
+      }, function(err, items) {
+        items.should.be.an.instanceOf(Array);
+        items.should.have.length(1);
+        items[0].should.have.property('name', test_pattern2.name);
         return done();
       });
     });

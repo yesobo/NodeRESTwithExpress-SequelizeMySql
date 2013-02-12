@@ -25,7 +25,11 @@ module.exports = (grunt) ->
                      'it']
 
             myproject:
-                src: ['*.js',
+                src: ['app.js',
+                      'database.js',
+                      'models.js',
+                      'routes.js',
+                      'rouesSequelize.js',
                       'daos/*.js',
                       'test/**/*.js']
         simplemocha:
@@ -45,7 +49,7 @@ module.exports = (grunt) ->
         coffee:
             compile:
                 files:
-                    grunt.file.expandMapping(['*.coffee', 'daos/*.coffee'], '', rename: (destBase, destPath) -> destBase + destPath.replace('.coffee', '.js'))
+                    grunt.file.expandMapping(['*.coffee', 'daos/*.coffee', 'test/daos/*.grunt-contrib-coffee'], '', rename: (destBase, destPath) -> destBase + destPath.replace('.coffee', '.js'))
 
         watch:
             coffee:

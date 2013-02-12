@@ -1,5 +1,5 @@
 (function() {
-  var DBConnector, util, winston;
+  var DBConnector, UrlValidator, util, winston;
 
   DBConnector = require("./daos/mongoHQDao.js");
 
@@ -7,21 +7,47 @@
 
   util = require('util');
 
+  UrlValidator = require('./urlValidator.js');
+
   module.exports = function(app) {
-    var daoObj;
+    var daoObj, urlValidator;
     daoObj = new DBConnector('design_patterns', 'alex.mongohq.com', 10001);
+    urlValidator = new UrlValidator(["name", "category"], ["limit", "offset"]);
     app.get('/api/patterns', function(req, res) {
-      var options;
-      options = {};
-      if (req.query.limit != null) {
-        options.limit = req.query.limit;
+      var findOptions, pageOptions;
+      winston.info("validating query");
+      if (urlValidator.isValidRequest(req)) {
+        findOptions = {};
+        if (req.query.name != null) {
+          findOptions.name = req.query.name;
+        }
+        if (req.query.category != null) {
+          findOptions.category = req.query.category;
+        }
+        pageOptions = {};
+        if (req.query.limit != null) {
+          pageOptions.limit = req.query.limit;
+        }
+        if (req.query.offset != null) {
+          pageOptions.offset = req.query.offset;
+        }
+        winston.info("searching...");
+        return daoObj.findAll(findOptions, pageOptions, function(err, items) {
+          winston.info("err: " + err + ", items: " + items);
+          if (err === null) {
+            winston.info("sending items");
+            return res.send(items);
+          } else {
+            return res.send(404, {
+              "message": "no documents found"
+            });
+          }
+        });
+      } else {
+        return res.send(400, {
+          "message": "unsupported query parameter"
+        });
       }
-      if (req.query.offset != null) {
-        options.offset = req.query.offset;
-      }
-      return daoObj.findAll(options, function(err, items) {
-        return res.send(items);
-      });
     });
     app.post('/api/patterns', function(req, res) {
       var new_pattern;

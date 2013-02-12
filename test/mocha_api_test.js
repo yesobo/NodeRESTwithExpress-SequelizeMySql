@@ -3,7 +3,8 @@ var request = require(modules_url + '/request'),
 	should = require(modules_url + '/should'),
 	util = require('util'),
 	MongoDBConnector = require('../daos/mongoHQDao.js'),
-	test_patterns = require('./test_patterns.js');
+	test_patterns = require('./test_patterns.js'),
+	winston = require('winston');
 
 var url = 'http://localhost:8010/api';
 
@@ -61,12 +62,54 @@ describe('Tests for patterns API, ', function() {
 		request(del_options, cb);
 	};
 
+	var testReturningFirstDocumentAndSize = function(document, size, res, body, done) {
+		res.statusCode.should.be.equal(200);
+		var dummy = res.should.be.json;
+		should.exist(body);
+		var patterns = JSON.parse(body);
+		patterns.should.be.an.instanceOf(Array);
+		patterns.should.have.length(size);
+		patterns[0].should.have.property('name', document.name);
+		done();
+	};
+
+	/*
+	* result: JSON object with key and val properties. ex: {key: "message", val: "no documents found"}
+	*/
+	var testErrorAndSingleResult = function(errorCode, result, res, body, done) {
+		winston.info("testErrorAndSingleResult: INIT");
+		res.statusCode.should.be.equal(errorCode);
+		var dummy = res.should.be.http;
+		should.exist(body);
+		var resp = JSON.parse(body);
+		resp.should.have.property(result.key, result.val);
+		done();
+	};
+
 	// Restart the DB with 2 test objects
 	before(function(done) {
 		var daoObj = new MongoDBConnector('design_patterns', 'alex.mongohq.com', 10001);
+		winston.info('deleting collection...');
 		daoObj.deleteAll( function(err) {
+			if(err !== null) {
+				winston.info("ERROR DELETING DB:" + err);
+			} else {
+				winston.info('collection deleted');
+			}
+			winston.info('inserting first test document');
 			daoObj.insert(test_pattern1, function(err, docs) {
+				if(err !== null) {
+					winston.info("ERROR INSERTING TEST DOCUMENT 1:" + err);
+				} else {
+					winston.info('test document 1, inserted');
+				}
+				winston.info('inserting second test document');
 				daoObj.insert(test_pattern2, function(err, docs) {
+					if(err !== null) {
+						winston.info("ERROR INSERTING TEST DOCUMENT 2:" + err);
+					} else {
+						winston.info('test document 2, inserted');
+					}
 					done();
 				});
 			});
@@ -138,19 +181,83 @@ describe('Tests for patterns API, ', function() {
 				if (err) {
 					done(err);
 				} else {
-					res.statusCode.should.be.equal(200);
-					var dummy = res.should.be.json;
-					should.exist(body);
-					var patterns = JSON.parse(body);
-					patterns.should.be.an.instanceOf(Array);
-					patterns.should.have.length(LIMIT);
-					patterns[0].should.have.property('name', test_pattern2.name);
-					done();
+					testReturningFirstDocumentAndSize(test_pattern2, LIMIT, res, body, done);
 				}
 			});
 		});
 	});
 
+	describe('Search patterns with GET /patterns?name=' + test_pattern1.name, function(){
+		it('should return our first test element', function(done){
+			request.get(url + '/patterns?name=' + test_pattern1.name, function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testReturningFirstDocumentAndSize(test_pattern1, 1, res, body, done);
+				}
+			});
+		});
+	});
+
+	describe('Search patterns with GET /patterns?name=' + test_pattern2.name, function(){
+		it('should return our second test document', function(done){
+			request.get(url + '/patterns?name=' + test_pattern2.name, function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testReturningFirstDocumentAndSize(test_pattern2, 1, res, body, done);
+				}
+			});
+		});
+	});
+
+	describe('Search patterns with GET /patterns?category=' + test_pattern1.category, function(){
+		it('should return our two test documents', function(done){
+			request.get(url + '/patterns?category=' + test_pattern1.category, function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testReturningFirstDocumentAndSize(test_pattern1, 2, res, body, done);
+				}
+			});
+		});
+	});
+
+	describe('Search patterns with GET /patterns?category=' + test_pattern1.category +'&name=' + test_pattern2.name, function(){
+		it('should return our second test documents', function(done){
+			request.get(url + '/patterns?category=' + test_pattern1.category + '&name=' + test_pattern2.name, function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testReturningFirstDocumentAndSize(test_pattern2, 1, res, body, done);
+				}
+			});
+		});
+	});
+
+	describe('Search patterns with GET /patterns?category=' + test_pattern1.category +'&name=noName', function(){
+		it("should return error 404 and {'message', 'document not found'}", function(done){
+			request.get(url + '/patterns?category=' + test_pattern1.category + '&name=noName', function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testErrorAndSingleResult(404, {key:"message", val: "no documents found"}, res, body, done);
+				}
+			});
+		});
+	});
+
+	describe('Search patterns with GET /patterns?noExistsField=failValue', function(){
+		it("should return error 404 and {'message', 'document not found'}", function(done){
+			request.get(url + '/patterns?noExistsField=failValue', function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testErrorAndSingleResult(400, {key:"message", val: "unsupported query parameter"}, res, body, done);
+				}
+			});
+		});
+	});
 
 	describe('Count patterns with GET /patterns/count ', function(){
 		it('should return statusCode 200 and a JSON object {"number_of_patterns": 2}.', function(done){
@@ -159,12 +266,7 @@ describe('Tests for patterns API, ', function() {
 					done(err);
 				}
 				else {
-					res.statusCode.should.be.equal(200);
-					var dummy = res.should.be.http;
-					should.exist(body);
-					var resp = JSON.parse(body);
-					resp.should.have.property("number_of_patterns", 2);
-					done();
+					testErrorAndSingleResult(200, {key:"number_of_patterns", value: 2 }, res, body, done);
 				}
 			});
 		});

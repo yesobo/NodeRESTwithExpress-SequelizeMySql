@@ -17,7 +17,7 @@
           predef: ['require', 'module', 'process', '__dirname', 'console', 'describe', 'before', 'beforeEach', 'it']
         },
         myproject: {
-          src: ['*.js', 'daos/*.js', 'test/**/*.js']
+          src: ['app.js', 'database.js', 'models.js', 'routes.js', 'rouesSequelize.js', 'daos/*.js', 'test/**/*.js']
         }
       },
       simplemocha: {
@@ -31,7 +31,7 @@
       },
       coffee: {
         compile: {
-          files: grunt.file.expandMapping(['*.coffee', 'daos/*.coffee'], '', {
+          files: grunt.file.expandMapping(['*.coffee', 'daos/*.coffee', 'test/daos/*.grunt-contrib-coffee'], '', {
             rename: function(destBase, destPath) {
               return destBase + destPath.replace('.coffee', '.js');
             }

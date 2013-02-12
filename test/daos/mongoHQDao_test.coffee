@@ -7,6 +7,8 @@ test_patterns = require '../test_patterns.js'
 mongodb = require 'mongodb'
 should = require "#{source_path}#{modules_path}/should"
 
+winston = require "winston"
+
 describe 'Tests for MongoDBConnector', ->
 	daoObj = null
 	in_db_patterns_names = {
@@ -21,17 +23,20 @@ describe 'Tests for MongoDBConnector', ->
 
 	before (done) ->
 		daoObj = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 10001
-		console.log "deleting collection..."
+		winston.log "deleting collection..."
 		daoObj.deleteAll (err) ->
-			console.log "collection deleted."
-			console.log "inserting pattern1"
+			winston.error "ERROR DELETING DB: #{err}" if err?
+			winston.info "collection deleted."
+			winston.info "inserting pattern1"
 			daoObj.insert test_pattern1, (err, docs) ->
-				console.log "pattern1 inserted"
-				console.log "inserting pattern2"
+				winston.error "ERROR INSERTING PATTERN1: #{err}" if err?
+				winston.info "pattern1 inserted"
+				winston.info "inserting pattern2"
 				daoObj.insert test_pattern2, (err, docs) ->
-					console.log "DB restarted"
+					winston.error "ERROR INSERTING PATTERN1: #{err}" if err?
+					winston.info "pattern2 inserted"
+					winston.info "DB restarted"
 					done()
-
 	beforeEach ->
 		daoObj = new MongoDBConnector 'design_patterns', 'alex.mongohq.com', 10001
 		null
@@ -44,37 +49,83 @@ describe 'Tests for MongoDBConnector', ->
 		should.exist daoObj.db
 		daoObj.db.should.be.an.instanceof mongodb.Db
 		done()
-	it 'findAll returns the collection', (done) ->
-		daoObj.findAll 0, (err, items) ->
+	it 'findAll with empty parameters returns the whole collection', (done) ->
+		daoObj.findAll {}, {}, (err, items) ->
 			items.should.be.an.instanceOf Array
 			items.should.have.length 2
 			done()
-	it 'findAll({limit:1}, callback) returns our first element', (done) ->
-		daoObj.findAll limit:1, (err, items) ->
+	it 'findAll({}, {limit:1}, callback) returns our first element', (done) ->
+		daoObj.findAll {}, limit:1, (err, items) ->
 			items.should.be.an.instanceOf Array
 			items.should.have.length 1
 			items[0].should.have.property 'name', test_pattern1.name
 			done()
-	it 'findAll({offset:1}, callback) returns the second element', (done) ->
-		daoObj.findAll offset:1, (err, items) ->
+	it 'findAll({}, {offset:1}, callback) returns the second element', (done) ->
+		daoObj.findAll {}, offset:1, (err, items) ->
 			items.should.be.an.instanceOf Array
 			items.should.have.length 1
 			items[0].should.have.property 'name', test_pattern2.name
 			done()
-	find_options =
+	pageOptions =
 		limit: 1
 		offset: 1
 	it 'findAll({limit:1, offset:1}, callback) returns the second element', (done) ->
-		daoObj.findAll find_options, (err, items) ->
-			items.should.be.an.instanceof Array
+		daoObj.findAll {}, pageOptions, (err, items) ->
+			items.should.be.an.instanceOf Array
 			items.should.have.length 1
 			items[0].should.have.property 'name', test_pattern2.name
 			done()
+	it "findAll with queryOptions = {name:#{test_pattern1.name}} returns our first test element", (done) ->
+		queryOptions =
+			name: test_pattern1.name
+		daoObj.findAll queryOptions, {}, (err, items) ->
+			items.should.be.an.instanceOf Array
+			items.should.have.length 1
+			items[0].should.have.property 'name', test_pattern1.name
+			done()
+	it "findAll with queryOptions = {name:#{test_pattern2.name}} returns our second test element", (done) ->
+		queryOptions =
+			name: test_pattern2.name
+		daoObj.findAll queryOptions, {}, (err, items) ->
+			items.should.be.an.instanceOf Array
+			items.should.have.length 1
+			items[0].should.have.property 'name', test_pattern2.name
+			done()
+	it "findAll with queryOptions = {category: #{test_pattern1.category}} returns both test patterns", (done) ->
+		queryOptions =
+			category: test_pattern1.category
+		daoObj.findAll queryOptions, {}, (err, items) ->
+			items.should.be.an.instanceOf Array
+			items.should.have.length 2
+			done()
+	it "findAll with queryOptions = {category: #{test_pattern1.category}, name: #{test_pattern2.name}} returns our second test element", (done) ->
+		queryOptions =
+			category: test_pattern1.category
+			name: test_pattern2.name
+		daoObj.findAll queryOptions, {}, (err, items) ->
+			items.should.be.an.instanceOf Array
+			items.should.have.length 1
+			items[0].should.have.property 'name', test_pattern2.name
+			done()
+	it "findAll with queryOptions = {category: #{test_pattern1.category}, name: 'noPattern'} returns 404 error and {'message', 'document not founr'}", (done) ->
+		queryOptions =
+			category: test_pattern1.category
+			name: 'noPattern'
+		daoObj.findAll queryOptions, {}, (err, items) ->
+			should.strictEqual err, 404
+			items.should.have.property 'message', 'no documents found'
+			done()
+	it "findAll with queryOptions = {noExistsField: ''} returns 404 error and {'message', 'document not founr'}", (done) ->
+		queryOptions =
+			noExistsField: ''
+		daoObj.findAll queryOptions, {}, (err, items) ->
+			should.strictEqual err, 404
+			items.should.have.property 'message', 'no documents found'
+			done()	
 	it "count returns my collection's number", (done) ->
 		daoObj.count (err, count) ->
 			should.strictEqual count, 2
 			done()
-
 	it "findByName with name = #{in_db_patterns_names.Singleton} returns the #{in_db_patterns_names.Singleton} pattern", (done) ->
 		daoObj.findByName in_db_patterns_names.Singleton, (err, item) ->
 			item.should.have.property 'name', 'Singleton'
@@ -84,7 +135,6 @@ describe 'Tests for MongoDBConnector', ->
 			should.strictEqual err, 404
 			item.should.have.property 'message', 'document not found'
 			done()
-
 	it "insert a new document (#{new_pattern.name}) returns the document", (done) ->
 		daoObj.insert new_pattern, (err, docs) ->
 			docs[0].should.have.property 'name', new_pattern.name
@@ -124,7 +174,7 @@ describe 'Tests for MongoDBConnector', ->
 		daoObj.delete new_pattern.name, (err, item) ->
 			daoObj.count (err, count) ->
 				should.strictEqual count, 2
-				daoObj.findAll 0, (err, items) ->
+				daoObj.findAll {}, {}, (err, items) ->
 					items.should.be.an.instanceOf Array
 					items.should.have.length 2
 					in_db_patterns_names.should.have.property items[0].name

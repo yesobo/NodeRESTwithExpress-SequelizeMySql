@@ -35,16 +35,19 @@ module.exports = class MongoDBConnector
 						privateDb.collection privateDBName, callback
 
 	#call: callback parameters are (err, items)
-	findAll: (options, callback) ->
+	findAll: (queryOpts, pagOpts, callback) ->
 		initTransaction.call this, (err, collection) ->
 			if err?
 				winston.error "ERROR!"
 				callback err, null
 			else
-				find_options =
-					limit: options.limit
-					skip: options.offset
-				collection.find({}, find_options).toArray (err, items) ->
+				pageOptions =
+					limit: pagOpts.limit
+					skip: pagOpts.offset
+				collection.find(queryOpts, pageOptions).toArray (err, items) ->
+					unless items.length
+						err = 404
+						items = {"message": "no documents found"}
 					callback err, items
 
 	#call: callback parameters are (err, count)

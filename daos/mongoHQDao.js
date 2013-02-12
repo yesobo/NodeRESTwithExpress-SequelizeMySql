@@ -45,18 +45,24 @@
       }
     };
 
-    MongoDBConnector.prototype.findAll = function(options, callback) {
+    MongoDBConnector.prototype.findAll = function(queryOpts, pagOpts, callback) {
       return initTransaction.call(this, function(err, collection) {
-        var find_options;
+        var pageOptions;
         if (err != null) {
           winston.error("ERROR!");
           return callback(err, null);
         } else {
-          find_options = {
-            limit: options.limit,
-            skip: options.offset
+          pageOptions = {
+            limit: pagOpts.limit,
+            skip: pagOpts.offset
           };
-          return collection.find({}, find_options).toArray(function(err, items) {
+          return collection.find(queryOpts, pageOptions).toArray(function(err, items) {
+            if (!items.length) {
+              err = 404;
+              items = {
+                "message": "no documents found"
+              };
+            }
             return callback(err, items);
           });
         }

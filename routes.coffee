@@ -1,17 +1,32 @@
 DBConnector = require "./daos/mongoHQDao.js"
 winston = require 'winston'
 util = require 'util'
+UrlValidator = require './urlValidator.js'
 
 module.exports = (app) ->
 	daoObj = new DBConnector 'design_patterns', 'alex.mongohq.com', 10001
+	urlValidator = new UrlValidator  ["name", "category"], ["limit", "offset"]
 
 	# GET all patterns
 	app.get '/api/patterns', (req, res) ->
-		options = {}
-		options.limit = req.query.limit if req.query.limit?
-		options.offset = req.query.offset if req.query.offset? 
-		daoObj.findAll options, (err, items) ->			
-			res.send items
+		winston.info "validating query"
+		if urlValidator.isValidRequest req
+			findOptions = {}
+			findOptions.name = req.query.name if req.query.name?
+			findOptions.category = req.query.category if req.query.category?
+			pageOptions = {}
+			pageOptions.limit = req.query.limit if req.query.limit?
+			pageOptions.offset = req.query.offset if req.query.offset? 
+			winston.info "searching..."
+			daoObj.findAll findOptions, pageOptions, (err, items) ->			
+				winston.info "err: #{err}, items: #{items}"
+				if err == null
+					winston.info "sending items"
+					res.send items
+				else
+					res.send 404, "message": "no documents found"
+		else
+			res.send 400, "message": "unsupported query parameter"
 
 	# POST a new pattern
 	app.post '/api/patterns', (req, res) ->

@@ -5,7 +5,7 @@
     singleton: {
       "name": "Singleton",
       "category": "Creational",
-      "intent": "Ensure a class only has one instance, and provide a global point of acg cess to it",
+      "intent": "Ensure a class only has one instance, and provide a global point of access to it",
       "motivation": "It's important for some classes to have exactly one instance. Making a class responsible for keepintrack of its sole instance.",
       "applicability": "there must be exactly one instance of a class, and it must be accessible.\\nwhen the sole instance should be extensible by subclassing, and clients",
       "structure": "Cambiar por BLOB"

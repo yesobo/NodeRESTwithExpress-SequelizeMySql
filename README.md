@@ -107,7 +107,7 @@ _________________
         "updated_patterns": 2
     }</pre>
 
-###/patterns/:name (DEL)###
+###/patterns (DEL)###
 
 - **DESCRIPTION** 	Deletes all patterns.
 - **URL STRUCTURE** 	`...[api_url]/patterns`
@@ -183,3 +183,14 @@ _________________
 - **METHOD**		DEL
 - **PARAMETERS**        _name:_ Used to specify the name of the pattern to be deleted
 - **ERRORS**           500 There was an error deleting the specified pattern.
+
+###Pagination /patterns?limit=:limit&offset=:offset####
+
+- **DESCRIPTION**   Used when you want a specific number of objects returned.
+- **URL STRUCTURE**     `...[api_url]/patterns?limit=:limit&offset=:offset
+- **METHOD**        GET
+- **PARAMETERS**    _offset:_ Offsets the start of each page by the number specified. **Default value is 0.**
+                    _limit:_ The number of individual objects that are returned in each page. **Default value is 10.**
+- **ERRORS**    
+
+    

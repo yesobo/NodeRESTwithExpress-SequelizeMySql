@@ -116,13 +116,18 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 	
+	// documented! /patterns (GET)
 	describe('Read patterns list with GET /patterns', function(){
 		it('should return statusCode 200 and a json array with the 2 test elements', function(done){
+			winston.info('GET /patterns test');
 			request.get(url + '/patterns', function (err, res, body) {
+				winston.info("request callback");
 				if(err) {
+					winston.info("error " +  err);
 					done(err);
 				}
 				else {
+					winston.info("comparing statusCode");
 					res.statusCode.should.be.equal(200);
 					var dummy = res.should.be.json;
 					should.exist(body);
@@ -135,6 +140,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented pagination
 	var LIMIT = 1;
 	describe('Read patterns with GET /patterns?limit=' + LIMIT, function() {
 		it('should return 1 element if limit = ' + LIMIT + ' is specefied at querystring', function(done){
@@ -155,6 +161,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented pagination
 	var OFFSET = 1;
 	describe('Read patterns with GET /patterns?offset=' + OFFSET, function() {
 		it('should return the second test element', function(done){
@@ -175,10 +182,24 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented pagination
 	describe('Read patterns with GET /patterns?limit=' + LIMIT + '&offset=' + OFFSET, function() {
 		it('should return the second test element', function(done){
 			request.get(url + '/patterns?limit=' + LIMIT + '&offset=' + OFFSET, function (err, res, body) {
 				if (err) {
+					done(err);
+				} else {
+					testReturningFirstDocumentAndSize(test_pattern2, LIMIT, res, body, done);
+				}
+			});
+		});
+	});
+
+	// documented pagination
+	describe('Read patterns with GET /patterns?offset=' + OFFSET + '&limit=' + LIMIT, function() {
+		it('should return the second test element', function(done){
+			request.get(url + '/patterns?offset=' + OFFSET + '&limit=' + LIMIT, function (err, res, body) {
+				if(err) {
 					done(err);
 				} else {
 					testReturningFirstDocumentAndSize(test_pattern2, LIMIT, res, body, done);
@@ -259,6 +280,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented /patterns/count (GET)
 	describe('Count patterns with GET /patterns/count ', function(){
 		it('should return statusCode 200 and a JSON object {"number_of_patterns": 2}.', function(done){
 			request.get(url + '/patterns/count', function (err, res, body) {
@@ -272,6 +294,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented /patterns/:name (GET)
 	describe('Get pattern by name with GET /patterns/' + test_pattern1.name + ' ', function() {
 		it('should return 200 and the specified element', function(done){
 			testIfExists(test_pattern1, function() {
@@ -280,6 +303,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented /patterns (POST)
 	describe('Add new pattern with POST ' + new_pattern + ' to /patterns/'  + new_pattern.name + ' ', function() {
 		it('should return statusCode 404 and our new_pattern object must NOT be in our db', function(done){
 			var post_options = {
@@ -302,6 +326,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented /patterns(POST)
 	describe('Add new pattern with POST ' + new_pattern + ' to /patterns ', function() {
 		it('should return statusCode 200 and our new_pattern object must be in our db', function(done){
 			var post_options = {
@@ -324,6 +349,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented /patterns (PUT)
 	describe('Update pattern with PUT '+ test_pattern3_modif + ' to /patterns/ ' + test_pattern3_modif.name + ' ', function() {
 		it('should return status code 200 and must have changed the element at our collection', function(done){
 			var post_options = {
@@ -348,6 +374,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented /patterns/:name (DEL)
 	describe('Delete pattern with DEL /patterns/ ' + new_pattern.name + ' ', function() {
 		it('should return statusCode 200 and it must not be in our collection', function(done) {
 			deletePatternByName(new_pattern.name, function(err, res, body) {
@@ -359,6 +386,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
+	// documented /patterns (PUT)
 	describe('Bulk update patterns with PUT a "patterns" JSON collection to /patterns', function() {
 		var col;
 		/* creates the collection */
@@ -405,7 +433,8 @@ describe('Tests for patterns API, ', function() {
 			});
 		});
 	});
-
+	
+	// documented /patterns (DEL)
 	describe('Bulk delete patterns with DEL to /patterns ', function() {
 		it('should return 200 a JSON object {"deleted_patterns": 2} and our db should be empty. ', function(done) {
 			var del_options = {

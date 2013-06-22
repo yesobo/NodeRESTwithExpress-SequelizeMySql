@@ -191,6 +191,6 @@ _________________
 - **METHOD**        GET
 - **PARAMETERS**    _offset:_ Offsets the start of each page by the number specified. **Default value is 0.**
                     _limit:_ The number of individual objects that are returned in each page. **Default value is 10.**
-- **ERRORS**    
+- **ERRORS**    400 Bad request
 
     

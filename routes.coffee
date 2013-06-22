@@ -11,20 +11,39 @@ module.exports = (app) ->
 	app.get '/api/patterns', (req, res) ->
 		winston.info "validating query"
 		if urlValidator.isValidRequest req
+			validation_error =
+				code: ''
+				message: ''
 			findOptions = {}
 			findOptions.name = req.query.name if req.query.name?
 			findOptions.category = req.query.category if req.query.category?
 			pageOptions = {}
-			pageOptions.limit = req.query.limit if req.query.limit?
-			pageOptions.offset = req.query.offset if req.query.offset? 
-			winston.info "searching..."
-			daoObj.findAll findOptions, pageOptions, (err, items) ->			
-				winston.info "err: #{err}, items: #{items}"
-				if err == null
-					winston.info "sending items"
-					res.send items
-				else
-					res.send 404, "message": "no documents found"
+			if req.query.limit? && req.query.limit != 'undefined'
+				pageOptions.limit = req.query.limit 
+				winston.info "limit value is: " + pageOptions.limit
+				if pageOptions.limit != ""
+					if isNaN pageOptions.limit
+						validation_error.code = 404
+						validation_error.message = "'" + pageOptions.limit + "' is not a valid limit value"
+			if req.query.offset? && typeof req.query.offset != 'undefined'
+				pageOptions.offset = req.query.offset
+				winston.info "offset value is: " + pageOptions.offset
+				if pageOptions.offset != ""
+					if isNaN pageOptions.offset
+						winston.info "offset isNaN"
+						validation_error.code = 404
+						validation_error.message = "'" + pageOptions.offset + "' is not a valid offset value"
+			if validation_error.code == ''
+				winston.info "searching..."
+				daoObj.findAll findOptions, pageOptions, (err, items) ->			
+					winston.info "err: #{err}, items: #{items}"
+					if err == null
+						winston.info "sending items"
+						res.send items
+					else
+						res.send 404, "message": "no documents found"
+			else
+				res.send validation_error.code, "message": validation_error.message
 		else
 			res.send 400, "message": "unsupported query parameter"
 

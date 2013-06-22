@@ -140,7 +140,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	// documented pagination
+	// documented pagination limit
 	var LIMIT = 1;
 	describe('Read patterns with GET /patterns?limit=' + LIMIT, function() {
 		it('should return 1 element if limit = ' + LIMIT + ' is specefied at querystring', function(done){
@@ -161,7 +161,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	// documented pagination
+	// documented pagination. offset
 	var OFFSET = 1;
 	describe('Read patterns with GET /patterns?offset=' + OFFSET, function() {
 		it('should return the second test element', function(done){
@@ -182,7 +182,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	// documented pagination
+	// documented pagination limit & offset
 	describe('Read patterns with GET /patterns?limit=' + LIMIT + '&offset=' + OFFSET, function() {
 		it('should return the second test element', function(done){
 			request.get(url + '/patterns?limit=' + LIMIT + '&offset=' + OFFSET, function (err, res, body) {
@@ -195,7 +195,7 @@ describe('Tests for patterns API, ', function() {
 		});
 	});
 
-	// documented pagination
+	// documented pagination offset & limit
 	describe('Read patterns with GET /patterns?offset=' + OFFSET + '&limit=' + LIMIT, function() {
 		it('should return the second test element', function(done){
 			request.get(url + '/patterns?offset=' + OFFSET + '&limit=' + LIMIT, function (err, res, body) {
@@ -203,6 +203,65 @@ describe('Tests for patterns API, ', function() {
 					done(err);
 				} else {
 					testReturningFirstDocumentAndSize(test_pattern2, LIMIT, res, body, done);
+				}
+			});
+		});
+	});
+
+	// documented. Pagination
+	var NOT_A_NUMBER = 'j';
+	var ERROR_MESSAGE_OFFSET = {
+		"message": "'" + NOT_A_NUMBER + "' is not a valid offset value"
+	};
+	describe('Read patterns with GET (patterns?offset=' + NOT_A_NUMBER, function() {
+		it('should return 400 and ' + ERROR_MESSAGE_OFFSET, function(done) {
+			request.get(url + '/patterns?offset=' + NOT_A_NUMBER, function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testErrorAndSingleResult(404, {key:"message", val: ERROR_MESSAGE_OFFSET.message}, res, body, done);
+				}
+			});
+		});
+	});
+
+	// documented. Pagination
+	describe('Read patterns with GET (patterns?offset=' + NOT_A_NUMBER + 'limit=' + LIMIT, function() {
+		it('should return 400 and ' + ERROR_MESSAGE_OFFSET, function(done) {
+			request.get(url + '/patterns?offset=' + NOT_A_NUMBER + '&limit=' + LIMIT, function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testErrorAndSingleResult(404, {key:"message", val: ERROR_MESSAGE_OFFSET.message}, res, body, done);
+				}
+			});
+		});
+	});
+
+	// documented. Pagination
+	var ERROR_MESSAGE_LIMIT = {
+		"message": "'" + NOT_A_NUMBER + "' is not a valid limit value"
+	};
+	describe('Read patterns with GET (patterns?limit=' + NOT_A_NUMBER, function() {
+		it('should return 400 and' + ERROR_MESSAGE_LIMIT, function(done) {
+			request.get(url + '/patterns?limit=' + NOT_A_NUMBER, function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testErrorAndSingleResult(404, {key:"message", val: ERROR_MESSAGE_LIMIT.message}, res, body, done);
+				}
+			});
+		});
+	});
+
+	// documented. Pagination
+	describe('Read patterns with GET (patterns?limit=' + NOT_A_NUMBER + 'offset=' + OFFSET, function() {
+		it('should return 400 and' + ERROR_MESSAGE_LIMIT, function(done) {
+			request.get(url + '/patterns?limit=' + NOT_A_NUMBER + '&offset=' + OFFSET, function(err, res, body) {
+				if (err) {
+					done(err);
+				} else {
+					testErrorAndSingleResult(404, {key:"message", val: ERROR_MESSAGE_LIMIT.message}, res, body, done);
 				}
 			});
 		});

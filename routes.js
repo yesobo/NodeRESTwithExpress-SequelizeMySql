@@ -14,9 +14,13 @@
     daoObj = new DBConnector('design_patterns', 'alex.mongohq.com', 10001);
     urlValidator = new UrlValidator(["name", "category"], ["limit", "offset"]);
     app.get('/api/patterns', function(req, res) {
-      var findOptions, pageOptions;
+      var findOptions, pageOptions, validation_error;
       winston.info("validating query");
       if (urlValidator.isValidRequest(req)) {
+        validation_error = {
+          code: '',
+          message: ''
+        };
         findOptions = {};
         if (req.query.name != null) {
           findOptions.name = req.query.name;
@@ -25,24 +29,45 @@
           findOptions.category = req.query.category;
         }
         pageOptions = {};
-        if (req.query.limit != null) {
+        if ((req.query.limit != null) && req.query.limit !== 'undefined') {
           pageOptions.limit = req.query.limit;
-        }
-        if (req.query.offset != null) {
-          pageOptions.offset = req.query.offset;
-        }
-        winston.info("searching...");
-        return daoObj.findAll(findOptions, pageOptions, function(err, items) {
-          winston.info("err: " + err + ", items: " + items);
-          if (err === null) {
-            winston.info("sending items");
-            return res.send(items);
-          } else {
-            return res.send(404, {
-              "message": "no documents found"
-            });
+          winston.info("limit value is: " + pageOptions.limit);
+          if (pageOptions.limit !== "") {
+            if (isNaN(pageOptions.limit)) {
+              validation_error.code = 404;
+              validation_error.message = "'" + pageOptions.limit + "' is not a valid limit value";
+            }
           }
-        });
+        }
+        if ((req.query.offset != null) && typeof req.query.offset !== 'undefined') {
+          pageOptions.offset = req.query.offset;
+          winston.info("offset value is: " + pageOptions.offset);
+          if (pageOptions.offset !== "") {
+            if (isNaN(pageOptions.offset)) {
+              winston.info("offset isNaN");
+              validation_error.code = 404;
+              validation_error.message = "'" + pageOptions.offset + "' is not a valid offset value";
+            }
+          }
+        }
+        if (validation_error.code === '') {
+          winston.info("searching...");
+          return daoObj.findAll(findOptions, pageOptions, function(err, items) {
+            winston.info("err: " + err + ", items: " + items);
+            if (err === null) {
+              winston.info("sending items");
+              return res.send(items);
+            } else {
+              return res.send(404, {
+                "message": "no documents found"
+              });
+            }
+          });
+        } else {
+          return res.send(validation_error.code, {
+            "message": validation_error.message
+          });
+        }
       } else {
         return res.send(400, {
           "message": "unsupported query parameter"

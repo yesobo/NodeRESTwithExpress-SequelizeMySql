@@ -1,4 +1,4 @@
-Node.js REST Service to MySql Local database with Express + Sequelize
+Node.js REST API for Code Patterns with MySql Local database with Express + Sequelize
 =====================================================================
 ----------------
 TODO:
